@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Co-working</string>
+    <string name="site_description">Бронирование Коворкингов УрФУ</string>
+    <string name="personal_account">Личный кабинет</string>
+    <string name="coworkings">Коворкинги</string>
+    <string name="contacts">Контакты</string>
 </resources>

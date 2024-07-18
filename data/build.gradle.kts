@@ -1,6 +1,9 @@
+import java.util.Properties
+
 plugins {
     id("com.android.library")
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.devtools.ksp") version "1.9.0-1.0.13"
 }
 
 android {
@@ -11,9 +14,17 @@ android {
         minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val localProperties = Properties()
+        localProperties.load(project.rootProject.file("local.properties").inputStream())
+
+        val address: String? = localProperties.getProperty("api.address")
+        buildConfigField("String", "API_ADDRESS", address.toString())
     }
 
     buildTypes {
+
+
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -29,10 +40,27 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
     implementation(project(":domain"))
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+    // Json converter
+    implementation(libs.core.jackson.databind)
+
+    // Dagger 2
+    implementation(libs.dagger.android)
+    implementation(libs.dagger.android.support)
+    ksp(libs.dagger.android.processor)
+    ksp(libs.dagger.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
