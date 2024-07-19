@@ -4,4 +4,6 @@
     <string name="personal_account">Личный кабинет</string>
     <string name="coworkings">Коворкинги</string>
     <string name="contacts">Контакты</string>
+    <string name="to_wath_workspaces">Перейти к просмотру коворкингов</string>
+    <string name="booking">Забронировать</string>
 </resources>

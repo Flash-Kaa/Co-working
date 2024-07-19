@@ -1,4 +1,4 @@
-package com.na.coworking.ui.globalelements
+package com.na.coworking.ui.global
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,12 +17,16 @@ private val grtskExaFont = FontFamily(
     Font(R.font.grtskexa)
 )
 
+private val grtskTeraFont = FontFamily(
+    Font(R.font.grtsktera)
+)
+
 @Composable
 fun GExaText(
     text: String,
     fontSize: TextUnit,
     modifier: Modifier = Modifier,
-    fontWeight: FontWeight = FontWeight(400),
+    fontWeight: FontWeight = FontWeight(500),
     color: Color = colorResource(id = R.color.soft_black),
     lineHeight: TextUnit = TextUnit.Unspecified,
     letterSpacing: TextUnit = TextUnit.Unspecified,
@@ -70,5 +74,61 @@ fun GExaText(
         textAlign = textAlign,
         modifier = modifier,
         fontFamily = grtskExaFont
+    )
+}
+
+@Composable
+fun GTeraText(
+    text: String,
+    fontSize: TextUnit,
+    modifier: Modifier = Modifier,
+    fontWeight: FontWeight = FontWeight(400),
+    color: Color = colorResource(id = R.color.soft_black),
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    minLines: Int = 1,
+    maxLines: Int = Int.MAX_VALUE,
+    textAlign: TextAlign = TextAlign.Start
+) {
+    Text(
+        text = text,
+        fontSize = fontSize,
+
+        fontWeight = fontWeight,
+        color = color,
+        lineHeight = lineHeight,
+        letterSpacing = letterSpacing,
+        minLines = minLines,
+        maxLines = maxLines,
+        textAlign = textAlign,
+        modifier = modifier,
+        fontFamily = grtskTeraFont
+    )
+}
+
+@Composable
+fun GTeraText(
+    text: AnnotatedString,
+    fontSize: TextUnit,
+    modifier: Modifier = Modifier,
+    fontWeight: FontWeight = FontWeight(400),
+    color: Color = colorResource(id = R.color.soft_black),
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    maxLines: Int = Int.MAX_VALUE,
+    textAlign: TextAlign = TextAlign.Start
+) {
+    Text(
+        text = text,
+        fontSize = fontSize,
+
+        fontWeight = fontWeight,
+        color = color,
+        lineHeight = lineHeight,
+        letterSpacing = letterSpacing,
+        maxLines = maxLines,
+        textAlign = textAlign,
+        modifier = modifier,
+        fontFamily = grtskTeraFont
     )
 }

@@ -13,4 +13,5 @@
     <color name="gray">#898C81</color>
     <color name="soft_white">#F4F5F6</color>
     <color name="soft_gray">#ACACAC</color>
+    <color name="light_gray">#DDDDDD</color>
 </resources>

@@ -8,7 +8,7 @@ data class Workspace(
     val institute: String,
     val rating: Float? = null,
     val privacy: Int = 0,
-    val images:List<Image> = emptyList(),
+    val images: List<Image> = emptyList(),
     val objects: List<WorkspaceObject> = emptyList(),
     val operationMode: List<OperationMode> = emptyList(),
     val amenities: List<Amenity> = emptyList()
