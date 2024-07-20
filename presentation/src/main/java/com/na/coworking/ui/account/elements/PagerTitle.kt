@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,46 +27,39 @@ import com.na.coworking.R
 import com.na.coworking.ui.global.GExaText
 
 @Composable
-fun Pager(currentPage: MutableState<Page>) {
-    Column {
-        LazyRow(
-            modifier = Modifier
-                .height(60.dp)
-                .fillMaxWidth()
-                .background(color = colorResource(id = R.color.soft_white))
-                .padding(horizontal = 30.dp)
-        ) {
-            items(Page.entries) { page ->
-                PageWithTitle(page, currentPage)
-            }
-        }
-
-        when (currentPage.value) {
-            Page.Booking -> {}
-            Page.Info -> {}
-        }
+fun PagerTitle(
+    page: MutableState<Page>
+) {
+    LazyRow(
+        modifier = Modifier
+            .height(60.dp)
+            .fillMaxWidth()
+            .background(color = colorResource(id = R.color.soft_white))
+            .padding(horizontal = 30.dp)
+    ) {
+        items(Page.entries) { curPage -> PageWithTitle(curPage, page) }
     }
 }
 
 @Composable
 private fun PageWithTitle(
-    page: Page,
-    currentPage: MutableState<Page>
+    curPage: Page,
+    page: MutableState<Page>
 ) {
     val colorId =
-        if (page == currentPage.value) R.color.soft_gray else R.color.soft_black
+        if (curPage == page.value) R.color.soft_gray else R.color.soft_black
 
     Box(
         modifier = Modifier
-            .line(page, currentPage)
+            .line(curPage, page)
             .fillMaxHeight()
             .clickable(
-                onClick = { currentPage.value = page },
+                onClick = { page.value = curPage },
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(bounded = true, color = Color.Gray)
             )
     ) {
-        PageTitle(page, colorId)
+        PageTitle(curPage, colorId)
     }
 
     Spacer(modifier = Modifier.padding(horizontal = 10.dp))

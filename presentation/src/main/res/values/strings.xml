@@ -9,4 +9,8 @@
     <string name="exit">Выход</string>
     <string name="profile">Профиль</string>
     <string name="my_bookings">Мои бронирования</string>
+    <string name="email">Электронная почта</string>
+    <string name="user">Пользователь</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="cancel_booking_cd">отмена брони</string>
 </resources>

@@ -29,12 +29,16 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.na.coworking.R
+import com.na.coworking.actions.AccountAction
 import com.na.coworking.domain.entities.User
 import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.GTeraText
 
 @Composable
-fun UserTitleBg(user: User) {
+fun UserTitleBg(
+    user: User,
+    getAction: (AccountAction) -> (() -> Unit)
+) {
     Box(
         modifier = Modifier.height(230.dp)
     ) {
@@ -48,7 +52,7 @@ fun UserTitleBg(user: User) {
             Spacer(modifier = Modifier.width(10.dp))
             UserName(user)
 
-            ExitButton(onClick = { /*TODO*/ })
+            ExitButton(onClick = getAction(AccountAction.OnExit))
         }
     }
 }

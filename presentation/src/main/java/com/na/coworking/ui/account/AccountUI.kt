@@ -13,22 +13,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.na.coworking.actions.AccountAction
 import com.na.coworking.domain.entities.User
 import com.na.coworking.ui.account.elements.Page
-import com.na.coworking.ui.account.elements.Pager
+import com.na.coworking.ui.account.elements.PagerTitle
 import com.na.coworking.ui.account.elements.UserTitleBg
+import com.na.coworking.ui.account.elements.pagerDrawer
 import com.na.coworking.ui.global.TopAppBar
 
 @Composable
 fun AccountUI(
     user: User,
-    currentPage: MutableState<Page>,
+    page: MutableState<Page>,
     paddingValues: PaddingValues,
     getAction: (AccountAction) -> (() -> Unit)
 ) {
     LazyColumn(
         contentPadding = paddingValues
     ) {
-        item { UserTitleBg(user) }
-        item { Pager(currentPage) }
+        item { UserTitleBg(user, getAction) }
+        item { PagerTitle(page) }
+        pagerDrawer(user, page, getAction)
     }
 }
 
@@ -43,14 +45,14 @@ private fun Preview() {
         accessLevel = 0
     )
 
-    val currentPage = remember {
-        mutableStateOf(Page.Info)
+    val page = remember {
+        mutableStateOf(Page.Booking)
     }
 
     Scaffold(
         topBar = { TopAppBar({ {} }) },
         modifier = Modifier.fillMaxSize(),
     ) {
-        AccountUI(user, currentPage, it, { {} })
+        AccountUI(user, page, it, { {} })
     }
 }
