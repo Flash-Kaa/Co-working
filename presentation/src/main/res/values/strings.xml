@@ -6,4 +6,7 @@
     <string name="contacts">Контакты</string>
     <string name="to_wath_workspaces">Перейти к просмотру коворкингов</string>
     <string name="booking">Забронировать</string>
+    <string name="exit">Выход</string>
+    <string name="profile">Профиль</string>
+    <string name="my_bookings">Мои бронирования</string>
 </resources>

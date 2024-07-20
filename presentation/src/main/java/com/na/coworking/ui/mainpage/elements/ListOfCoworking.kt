@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
@@ -196,7 +197,7 @@ private fun PageIndicator(pagerState: PagerState) {
             Box(
                 modifier = Modifier
                     .size(9.dp)
-                    .clip(RoundedCornerShape(50))
+                    .clip(CircleShape)
                     .background(
                         if (pagerState.currentPage == index)
                             colorResource(id = R.color.red)
