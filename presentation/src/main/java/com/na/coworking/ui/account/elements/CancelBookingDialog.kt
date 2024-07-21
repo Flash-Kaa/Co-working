@@ -32,6 +32,7 @@ import androidx.compose.ui.window.Dialog
 import com.na.coworking.R
 import com.na.coworking.actions.AccountAction
 import com.na.coworking.ui.global.GExaText
+import com.na.coworking.ui.global.RedButton
 
 @Composable
 fun CancelBookingDialog(
@@ -73,7 +74,8 @@ private fun AnswerButtons(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Spacer(modifier = Modifier.weight(spacerWeight))
-        Button(
+
+        RedButton(
             text = stringResource(id = R.string.yes),
             onClick = {
                 getAction(AccountAction.OnCancelBooking(bookingId)).invoke()
@@ -81,43 +83,19 @@ private fun AnswerButtons(
             },
             modifier = Modifier.weight(buttonWeight)
         )
+
         Spacer(modifier = Modifier.weight(spacerWeight))
 
-        Button(
+        RedButton(
             text = stringResource(id = R.string.no),
             onClick = onDismiss,
             modifier = Modifier.weight(buttonWeight)
         )
+
         Spacer(modifier = Modifier.weight(spacerWeight))
     }
 
     Spacer(modifier = Modifier.height(20.dp))
-}
-
-@Composable
-private fun Button(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .clickable(
-                onClick = onClick,
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = true, color = Color.Gray)
-            )
-            .shadow(4.dp, RoundedCornerShape(5.dp))
-            .background(
-                color = colorResource(id = R.color.red),
-                shape = RoundedCornerShape(5.dp)
-            )
-            .padding(10.dp)
-    ) {
-        GExaText(
-            text = text,
-            fontSize = 16.sp,
-            color = colorResource(id = R.color.white),
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
 }
 
 @Composable

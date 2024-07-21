@@ -23,4 +23,12 @@
     <string name="are_your_want_to_cancal_booking">Вы хотите отменить своё бронирование?</string>
     <string name="no">Нет</string>
     <string name="yes">Да</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="off_password_visibility_cd">Выключить видимость пароля</string>
+    <string name="on_password_visibility_cd">Включить видимость пароля</string>
+    <string name="authorization_title">Войдите или зарегистрируйтесь</string>
+    <string name="authorize">Войти</string>
+    <string name="have_not_account">Нет аккаунта?</string>
+    <string name="register">Зарегистрируйтесь</string>
 </resources>

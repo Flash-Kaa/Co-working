@@ -50,6 +50,7 @@ import com.na.coworking.actions.MainPageAction
 import com.na.coworking.domain.entities.Workspace
 import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.GTeraText
+import com.na.coworking.ui.global.RedButton
 import kotlinx.coroutines.flow.flow
 
 @Composable
@@ -152,9 +153,11 @@ private fun CoworkingInfo(
 
         Description(coworking, Modifier.padding(horizontal = 30.dp))
 
-        BookingButton(
+        RedButton(
+            text = stringResource(R.string.booking),
             onClick = getAction(MainPageAction.ToCoworking(coworking.id)),
-            modifier = Modifier.padding(horizontal = 30.dp, vertical = 10.dp)
+            modifier = Modifier.padding(horizontal = 30.dp, vertical = 10.dp),
+            fontSize = 13.sp
         )
     }
 }
@@ -220,37 +223,6 @@ private fun ImageDrawer(imageId: Int) {
         modifier = Modifier.fillMaxSize(),
         contentDescription = null
     )
-}
-
-@Composable
-private fun BookingButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        GExaText(
-            text = stringResource(R.string.booking),
-            fontSize = 13.sp,
-            color = colorResource(id = R.color.white),
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(
-                    onClick = onClick,
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = rememberRipple(bounded = true, color = Color.Gray),
-                )
-                .background(
-                    color = colorResource(id = R.color.red),
-                    shape = RoundedCornerShape(5.dp)
-                )
-                .padding(top = 15.dp, bottom = 15.dp, start = 35.dp, end = 35.dp)
-        )
-    }
 }
 
 @Composable

@@ -36,6 +36,7 @@ import com.na.coworking.R
 import com.na.coworking.actions.AccountAction
 import com.na.coworking.domain.entities.Booking
 import com.na.coworking.ui.global.GExaText
+import com.na.coworking.ui.global.RedButton
 
 fun LazyListScope.bookings(
     bookings: List<Booking>,
@@ -126,9 +127,13 @@ private fun TimeWithButtonsRow(
                 modifier = Modifier.weight(2f)
             )
         } else {
-            ConfirmBookingDialog(
+            Spacer(modifier = Modifier.width(5.dp))
+            RedButton(
+                text = stringResource(R.string.confirm),
                 onClick = { showConfirmDialog.value = true },
-                modifier = Modifier.weight(2f)
+                modifier = Modifier.weight(2f),
+                fontSize = 12.sp,
+                padding = 6.dp
             )
 
             CancelBooking(
@@ -190,32 +195,6 @@ private fun TextWriter(text: String, modifier: Modifier) {
 }
 
 @Composable
-private fun ConfirmBookingDialog(
-    onClick: () -> Unit,
-    modifier: Modifier
-) {
-    Spacer(modifier = Modifier.width(5.dp))
-    GExaText(
-        text = stringResource(R.string.confirm),
-        color = colorResource(id = R.color.white),
-        fontSize = 12.sp,
-        textAlign = TextAlign.Center,
-        modifier = modifier
-            .clickable(
-                onClick = onClick,
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = true, color = Color.Gray)
-            )
-            .fillMaxWidth()
-            .background(
-                color = colorResource(id = R.color.red),
-                shape = RoundedCornerShape(5.dp)
-            )
-            .padding(7.dp)
-    )
-}
-
-@Composable
 private fun CancelBooking(
     onClick: () -> Unit,
     modifier: Modifier
@@ -236,5 +215,6 @@ private fun CancelBooking(
                 color = colorResource(id = R.color.soft_gray),
                 shape = RoundedCornerShape(5.dp)
             )
+            .padding(1.dp)
     )
 }

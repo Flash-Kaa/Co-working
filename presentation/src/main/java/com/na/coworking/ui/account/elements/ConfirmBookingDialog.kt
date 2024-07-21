@@ -45,7 +45,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.na.coworking.R
 import com.na.coworking.actions.AccountAction
+import com.na.coworking.actions.AuthorizationAction
 import com.na.coworking.ui.global.GExaText
+import com.na.coworking.ui.global.RedButton
 
 @Composable
 fun ConfirmBookingDialog(
@@ -71,7 +73,11 @@ fun ConfirmBookingDialog(
             Title()
             DialogDescription()
             CodeField(code, isError)
-            ConfirmButton(bookingId, code, isError, onDismiss, getAction)
+            RedButton(
+                text = stringResource(R.string.confirm_booking),
+                onClick =  onConfirmAction(bookingId, code, isError, onDismiss, getAction),
+                modifier = Modifier.fillMaxWidth()
+            )
         }
 
         CancelButton(onDismiss)
@@ -116,41 +122,6 @@ private fun DialogDescription() {
         fontWeight = FontWeight(400),
         modifier = Modifier.fillMaxWidth()
     )
-
-    Spacer(modifier = Modifier.height(20.dp))
-}
-
-@Composable
-private fun ConfirmButton(
-    bookingId: Int,
-    code: MutableState<String>,
-    isError: MutableState<Boolean>,
-    onDismiss: () -> Unit,
-    getAction: (AccountAction) -> () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .clickable(
-                onClick = onConfirmAction(bookingId, code, isError, onDismiss, getAction),
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = true, color = Color.Gray)
-            )
-            .shadow(4.dp, RoundedCornerShape(5.dp))
-            .fillMaxWidth()
-            .background(
-                color = colorResource(id = R.color.red),
-                shape = RoundedCornerShape(5.dp)
-            )
-            .padding(15.dp)
-    ) {
-        GExaText(
-            text = stringResource(R.string.confirm_booking),
-            fontSize = 16.sp,
-            color = colorResource(id = R.color.white),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
-        )
-    }
 
     Spacer(modifier = Modifier.height(20.dp))
 }
