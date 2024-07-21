@@ -13,4 +13,9 @@
     <string name="user">Пользователь</string>
     <string name="confirm">Подтвердить</string>
     <string name="cancel_booking_cd">отмена брони</string>
+    <string name="confirmed">Подтверждено</string>
+    <string name="input_code_description">Введите 6-ти значный код, выданный администратором</string>
+    <string name="confirm_code">Код подтверждения</string>
+    <string name="confirm_booking">Подтвердить бронирование</string>
+    <string name="cancel_confirm">отменить подтверждение</string>
 </resources>

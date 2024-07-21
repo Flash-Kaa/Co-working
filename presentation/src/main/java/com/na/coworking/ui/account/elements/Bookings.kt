@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -110,21 +111,41 @@ private fun TimeWithButtonsRow(
     booking: Booking,
     getAction: (AccountAction) -> (() -> Unit)
 ) {
+    val showConfirmDialog = remember { mutableStateOf(false) }
+    val showCancelDialog = remember { mutableStateOf(false) }
+
     Row {
         TextWriter(
             text = "${booking.timeStart}-${booking.timeEnd}",
             modifier = Modifier.weight(2f)
         )
 
-        ConfirmBooking(
-            onClick = getAction(AccountAction.OnConfirmBooking(booking.id)),
-            modifier = Modifier.weight(2f)
-        )
+        if (booking.isConfirmed) {
+            TextWriter(
+                text = stringResource(R.string.confirmed),
+                modifier = Modifier.weight(2f)
+            )
+        } else {
+            ConfirmBookingDialog(
+                onClick = { showConfirmDialog.value = true },
+                modifier = Modifier.weight(2f)
+            )
 
-        CancelBooking(
-            onClick = getAction(AccountAction.OnCancelBooking(booking.id)),
-            modifier = Modifier.weight(1f)
+            CancelBooking(
+                onClick = { /*TODO*/},
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+
+    if (showConfirmDialog.value) {
+        ConfirmBookingDialog(
+            onDismiss = { showConfirmDialog.value = false },
+            bookingId = booking.id,
+            getAction = getAction
         )
+    } else if (showCancelDialog.value) {
+
     }
 }
 
@@ -165,7 +186,7 @@ private fun TextWriter(text: String, modifier: Modifier) {
 }
 
 @Composable
-private fun ConfirmBooking(
+private fun ConfirmBookingDialog(
     onClick: () -> Unit,
     modifier: Modifier
 ) {
