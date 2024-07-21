@@ -47,8 +47,8 @@ import com.na.coworking.ui.global.GExaText
 
 @Composable
 fun ConfirmBookingDialog(
-    onDismiss: () -> Unit,
     bookingId: Int,
+    onDismiss: () -> Unit,
     getAction: (AccountAction) -> (() -> Unit)
 ) {
     val code = remember { mutableStateOf("") }
@@ -69,7 +69,7 @@ fun ConfirmBookingDialog(
             Title()
             DialogDescription()
             CodeField(code, isError)
-            ConfirmButton(code, isError, getAction, bookingId)
+            ConfirmButton(bookingId, code, isError, onDismiss, getAction)
         }
 
         CancelButton(onDismiss)
@@ -120,15 +120,16 @@ private fun DialogDescription() {
 
 @Composable
 private fun ConfirmButton(
+    bookingId: Int,
     code: MutableState<String>,
     isError: MutableState<Boolean>,
-    getAction: (AccountAction) -> () -> Unit,
-    bookingId: Int
+    onDismiss: () -> Unit,
+    getAction: (AccountAction) -> () -> Unit
 ) {
     Box(
         modifier = Modifier
             .clickable(
-                onClick = onConfirmAction(code, isError, getAction, bookingId),
+                onClick = onConfirmAction(bookingId, code, isError, onDismiss, getAction),
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(bounded = true, color = Color.Gray)
             )
@@ -154,10 +155,11 @@ private fun ConfirmButton(
 
 @Composable
 private fun onConfirmAction(
+    bookingId: Int,
     code: MutableState<String>,
     isError: MutableState<Boolean>,
+    onDismiss: () -> Unit,
     getAction: (AccountAction) -> () -> Unit,
-    bookingId: Int
 ): () -> Unit = {
     val codeIntValue = code.value.toIntOrNull()
     if (codeIntValue == null) {
@@ -169,6 +171,8 @@ private fun onConfirmAction(
                 code = codeIntValue
             )
         ).invoke()
+
+        onDismiss.invoke()
     }
 }
 
@@ -179,10 +183,7 @@ private fun CodeField(
 ) {
     TextField(
         value = code.value,
-        onValueChange = {
-            code.value = it
-            isError.value = false
-        },
+        onValueChange = { code.value = it },
         shape = RoundedCornerShape(5.dp),
         modifier = Modifier
             .shadow(3.dp, RoundedCornerShape(5.dp))
@@ -257,9 +258,10 @@ private fun Placeholder() {
 @Composable
 private fun Preview() {
     Box(Modifier.fillMaxSize()) {
-        ConfirmBookingDialog(onDismiss = { /*TODO*/ }, bookingId = 0) {
-            {}
-        }
-
+        ConfirmBookingDialog(
+            onDismiss = { },
+            bookingId = 0,
+            getAction = { {} }
+        )
     }
 }

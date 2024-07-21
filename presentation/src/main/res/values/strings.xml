@@ -18,4 +18,9 @@
     <string name="confirm_code">Код подтверждения</string>
     <string name="confirm_booking">Подтвердить бронирование</string>
     <string name="cancel_confirm">отменить подтверждение</string>
+    <string name="not_cancel">не отменять</string>
+    <string name="are_your_shoure">Вы уверены?</string>
+    <string name="are_your_want_to_cancal_booking">Вы хотите отменить своё бронирование?</string>
+    <string name="no">Нет</string>
+    <string name="yes">Да</string>
 </resources>

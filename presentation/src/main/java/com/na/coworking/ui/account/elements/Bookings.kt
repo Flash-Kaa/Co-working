@@ -132,7 +132,7 @@ private fun TimeWithButtonsRow(
             )
 
             CancelBooking(
-                onClick = { /*TODO*/},
+                onClick = { showCancelDialog.value = true },
                 modifier = Modifier.weight(1f)
             )
         }
@@ -145,7 +145,11 @@ private fun TimeWithButtonsRow(
             getAction = getAction
         )
     } else if (showCancelDialog.value) {
-
+        CancelBookingDialog(
+            onDismiss = { showCancelDialog.value = false },
+            bookingId = booking.id,
+            getAction = getAction
+        )
     }
 }
 
