@@ -9,11 +9,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.na.coworking.actions.MainPageAction
 import com.na.coworking.appComponent
 import com.na.coworking.domain.entities.Workspace
-import com.na.coworking.navigation.main.MainPageRouter
+import com.na.coworking.navigation.Router
 
 @Composable
 fun DrawerMainUI(
-    router: MainPageRouter,
+    router: Router,
     padding: PaddingValues
 ) {
     val viewModel: MainPageVM = viewModel(

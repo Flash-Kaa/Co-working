@@ -8,4 +8,6 @@ import javax.inject.Singleton
 @Component(modules = [AppModule::class])
 internal interface AppComponent {
     fun getMainPageVMSubcomponent(): MainViewModelSubcomponent
+
+    fun getAccountVMSubcomponent(): AccountViewModelSubcomponent
 }

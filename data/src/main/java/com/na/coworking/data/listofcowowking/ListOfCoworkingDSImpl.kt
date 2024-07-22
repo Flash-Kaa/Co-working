@@ -10,7 +10,51 @@ import kotlinx.coroutines.flow.asStateFlow
 internal class ListOfCoworkingDSImpl(
 // TODO: private val service: ServiceAPIWhereGetList
 ) : ListOfCoworkingDataSource {
-    private val _items: MutableStateFlow<List<Workspace>> = MutableStateFlow(emptyList())
+    private val hardData = listOf(
+        Workspace(
+            id = 1234,
+            name = "Радиоточка",
+            description = "– это удобные столы, мягкие диваны, много подушек. Это первый коворкинг, в котором расположена точка питания. Здесь студенты могут не только подготовиться к учебным занятиям, но и вкусно перекусить, пообедать. ",
+            address = "Ул. Мира, 32",
+            institute = "ИРИТ-РТФ",
+            rating = 4f,
+            images = listOf(Workspace.Image(12, ""), Workspace.Image(123, ""))
+        ),
+        Workspace(
+            id = 1234,
+            name = "Радиоточка",
+            description = "– это удобные столы, мягкие диваны, много подушек. Это первый коворкинг, в котором расположена точка питания. Здесь студенты могут не только подготовиться к учебным занятиям, но и вкусно перекусить, пообедать. ",
+            address = "Ул. Мира, 32",
+            institute = "ИРИТ-РТФ",
+            rating = 3.2f,
+            images = listOf(
+                Workspace.Image(12, ""),
+                Workspace.Image(123, ""),
+                Workspace.Image(123, "")
+            )
+        ),
+        Workspace(
+            id = 1234,
+            name = "Радиоточка",
+            description = "– это удобные столы, мягкие диваны, много подушек. Это первый коворкинг, в котором расположена точка питания. Здесь студенты могут не только подготовиться к учебным занятиям, но и вкусно перекусить, пообедать. ",
+            address = "Ул. Мира, 32",
+            institute = "ИРИТ-РТФ",
+            rating = 3.2f,
+            images = listOf(
+                Workspace.Image(12, ""),
+                Workspace.Image(123, ""),
+                Workspace.Image(123, ""),
+                Workspace.Image(123, ""),
+                Workspace.Image(123, ""),
+                Workspace.Image(123, ""),
+                Workspace.Image(123, ""),
+                Workspace.Image(123, ""),
+                Workspace.Image(123, "")
+            )
+        )
+    )
+
+    private val _items: MutableStateFlow<List<Workspace>> = MutableStateFlow(hardData)
     val items: StateFlow<List<Workspace>> = _items.asStateFlow()
 
     override suspend fun getList(): Flow<List<Workspace>> {

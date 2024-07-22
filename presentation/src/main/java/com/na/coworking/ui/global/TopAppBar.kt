@@ -93,15 +93,24 @@ private fun SideBar(
         Column {
             LeftSizeTextButton(
                 text = stringResource(R.string.personal_account),
-                onClick = getAction(GlobalAction.ToPersonAccount)
+                onClick = {
+                    getAction(GlobalAction.ToPersonAccount).invoke()
+                    isOpen.value = false
+                }
             )
             LeftSizeTextButton(
                 text = stringResource(R.string.coworkings),
-                onClick = getAction(GlobalAction.ToListOfCoworking)
+                onClick = {
+                    getAction(GlobalAction.ToListOfCoworking).invoke()
+                    isOpen.value = false
+                }
             )
             LeftSizeTextButton(
                 text = stringResource(R.string.contacts),
-                onClick = getAction(GlobalAction.ToContacts)
+                onClick = {
+                    getAction(GlobalAction.ToContacts).invoke()
+                    isOpen.value = false
+                }
             )
         }
     }

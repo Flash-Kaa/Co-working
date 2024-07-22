@@ -6,8 +6,6 @@ import androidx.compose.animation.core.AnimationVector4D
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextField
@@ -44,16 +41,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.na.coworking.R
-import com.na.coworking.actions.AccountAction
-import com.na.coworking.actions.AuthorizationAction
+import com.na.coworking.actions.AccountEvent
+import com.na.coworking.domain.entities.LoadState
 import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.RedButton
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 @Composable
 fun ConfirmBookingDialog(
     bookingId: Int,
     onDismiss: () -> Unit,
-    getAction: (AccountAction) -> (() -> Unit)
+    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
 ) {
     val code = remember { mutableStateOf("") }
     val isError = remember { mutableStateOf(false) }
@@ -75,7 +74,7 @@ fun ConfirmBookingDialog(
             CodeField(code, isError)
             RedButton(
                 text = stringResource(R.string.confirm_booking),
-                onClick =  onConfirmAction(bookingId, code, isError, onDismiss, getAction),
+                onClick = onConfirmAction(bookingId, code, isError, onDismiss, getEvent),
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -132,14 +131,14 @@ private fun onConfirmAction(
     code: MutableState<String>,
     isError: MutableState<Boolean>,
     onDismiss: () -> Unit,
-    getAction: (AccountAction) -> () -> Unit,
+    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
 ): () -> Unit = {
     val codeIntValue = code.value.toIntOrNull()
     if (codeIntValue == null) {
         isError.value = true
     } else {
-        getAction(
-            AccountAction.OnConfirmBooking(
+        getEvent(
+            AccountEvent.OnConfirmBooking(
                 bookingId = bookingId,
                 code = codeIntValue
             )
@@ -235,7 +234,7 @@ private fun Preview() {
         ConfirmBookingDialog(
             onDismiss = { },
             bookingId = 0,
-            getAction = { {} }
+            getEvent = { { flow { } } }
         )
     }
 }

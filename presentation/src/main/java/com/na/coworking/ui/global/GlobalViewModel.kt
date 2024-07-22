@@ -3,10 +3,10 @@ package com.na.coworking.ui.global
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.na.coworking.actions.GlobalAction
-import com.na.coworking.navigation.global.GlobalRouter
+import com.na.coworking.navigation.Router
 
 class GlobalViewModel(
-    private val router: GlobalRouter
+    private val router: Router
 ) : ViewModel() {
     fun getAction(action: GlobalAction): () -> Unit {
         return when (action) {
@@ -33,7 +33,7 @@ class GlobalViewModel(
         router.navigateToPersonalAccount()
     }
 
-    class Factory(private val router: GlobalRouter) : ViewModelProvider.Factory {
+    class Factory(private val router: Router) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return GlobalViewModel(router) as T

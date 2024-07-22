@@ -6,31 +6,40 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.na.coworking.actions.AccountAction
+import com.na.coworking.actions.AccountEvent
+import com.na.coworking.domain.entities.Booking
+import com.na.coworking.domain.entities.LoadState
 import com.na.coworking.domain.entities.User
 import com.na.coworking.ui.account.elements.Page
 import com.na.coworking.ui.account.elements.PagerTitle
 import com.na.coworking.ui.account.elements.UserTitleBg
-import com.na.coworking.ui.account.elements.pagerDrawer
+import com.na.coworking.ui.account.elements.pager
 import com.na.coworking.ui.global.TopAppBar
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 @Composable
 fun AccountUI(
     user: User,
     page: MutableState<Page>,
     paddingValues: PaddingValues,
-    getAction: (AccountAction) -> (() -> Unit)
+    bookings: State<List<Booking>>,
+    getAction: (AccountAction) -> (() -> Unit),
+    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
 ) {
     LazyColumn(
         contentPadding = paddingValues
     ) {
         item { UserTitleBg(user, getAction) }
         item { PagerTitle(page) }
-        pagerDrawer(user, page, getAction)
+        pager(user, page, bookings, getEvent)
     }
 }
 
@@ -49,10 +58,42 @@ private fun Preview() {
         mutableStateOf(Page.Booking)
     }
 
+    val list = listOf(
+        Booking(
+            id = 0,
+            timeStart = "12:00",
+            timeEnd = "13:00",
+            date = "09.07.2024",
+            image = "",
+            isConfirmed = false,
+            name = "радиоточка"
+        ),
+        Booking(
+            id = 1,
+            timeStart = "18:30",
+            timeEnd = "19:00",
+            date = "14.08.2024",
+            image = "",
+            isConfirmed = false,
+            name = "коворкинг"
+        ),
+        Booking(
+            id = 2,
+            timeStart = "14:00",
+            timeEnd = "14:20",
+            date = "01.07.2024",
+            image = "",
+            isConfirmed = false,
+            name = "р-044"
+        ),
+    )
+
+    val state = flow { emit(list) }.collectAsState(initial = emptyList())
+
     Scaffold(
         topBar = { TopAppBar({ {} }) },
         modifier = Modifier.fillMaxSize(),
     ) {
-        AccountUI(user, page, it, { {} })
+        AccountUI(user, page, it, state, { {} }, { { flow {} } })
     }
 }

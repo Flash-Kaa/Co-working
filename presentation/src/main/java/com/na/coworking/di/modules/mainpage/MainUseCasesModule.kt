@@ -3,7 +3,7 @@ package com.na.coworking.di.modules.mainpage
 import com.na.coworking.data.di.ListOfCoworkingRepositoryScope
 import com.na.coworking.data.di.listofcoworking.ListOfCoworkingRepositoryModule
 import com.na.coworking.domain.interfaces.listofcowowking.ListOfCoworkingRepository
-import com.na.coworking.domain.usecases.listofcoworking.GetListUseCase
+import com.na.coworking.domain.usecases.listofcoworking.GetListOfCoworkingUseCase
 import dagger.Module
 import dagger.Provides
 
@@ -13,5 +13,5 @@ internal class MainUseCasesModule {
     @ListOfCoworkingRepositoryScope
     fun provideGetUseCase(
         repository: ListOfCoworkingRepository
-    ): GetListUseCase = GetListUseCase(repository)
+    ): GetListOfCoworkingUseCase = GetListOfCoworkingUseCase(repository)
 }

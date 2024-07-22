@@ -5,3 +5,6 @@ import javax.inject.Scope
 
 @Scope
 annotation class ListOfCoworkingRepositoryScope
+
+@Scope
+annotation class BookingsRepositoryScope

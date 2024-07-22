@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class GetListUseCase(
+class GetListOfCoworkingUseCase(
     private val repository: ListOfCoworkingRepository
 ) {
     private val _items = MutableStateFlow<List<Workspace>>(emptyList())

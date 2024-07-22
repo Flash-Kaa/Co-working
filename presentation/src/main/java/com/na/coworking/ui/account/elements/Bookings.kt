@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,18 +30,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.na.coworking.R
-import com.na.coworking.actions.AccountAction
+import com.na.coworking.actions.AccountEvent
 import com.na.coworking.domain.entities.Booking
+import com.na.coworking.domain.entities.LoadState
 import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.RedButton
+import kotlinx.coroutines.flow.Flow
 
 fun LazyListScope.bookings(
-    bookings: List<Booking>,
-    getAction: (AccountAction) -> (() -> Unit)
+    bookings: State<List<Booking>>,
+    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
 ) {
     item { Spacer(modifier = Modifier.height(10.dp)) }
 
@@ -54,7 +56,7 @@ fun LazyListScope.bookings(
         )
     }
 
-    items(bookings) {
+    items(bookings.value) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -62,7 +64,7 @@ fun LazyListScope.bookings(
                 .background(colorResource(id = R.color.soft_white))
                 .padding(horizontal = 10.dp)
         ) {
-            BookingCard(it, getAction)
+            BookingCard(it, getEvent)
             Spacer(modifier = Modifier.height(10.dp))
         }
     }
@@ -71,7 +73,7 @@ fun LazyListScope.bookings(
 @Composable
 private fun BookingCard(
     booking: Booking,
-    getAction: (AccountAction) -> (() -> Unit)
+    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -86,14 +88,14 @@ private fun BookingCard(
         // TODO: Booking icon
         CardImage()
 
-        CardInfo(booking, getAction)
+        CardInfo(booking, getEvent)
     }
 }
 
 @Composable
 private fun CardInfo(
     booking: Booking,
-    getAction: (AccountAction) -> (() -> Unit)
+    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
@@ -103,14 +105,14 @@ private fun CardInfo(
 
         Spacer(modifier = Modifier.height(5.dp))
 
-        TimeWithButtonsRow(booking, getAction)
+        TimeWithButtonsRow(booking, getEvent)
     }
 }
 
 @Composable
 private fun TimeWithButtonsRow(
     booking: Booking,
-    getAction: (AccountAction) -> (() -> Unit)
+    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
 ) {
     val showConfirmDialog = remember { mutableStateOf(false) }
     val showCancelDialog = remember { mutableStateOf(false) }
@@ -147,13 +149,13 @@ private fun TimeWithButtonsRow(
         ConfirmBookingDialog(
             onDismiss = { showConfirmDialog.value = false },
             bookingId = booking.id,
-            getAction = getAction
+            getEvent = getEvent
         )
     } else if (showCancelDialog.value) {
         CancelBookingDialog(
             onDismiss = { showCancelDialog.value = false },
             bookingId = booking.id,
-            getAction = getAction
+            getEvent = getEvent
         )
     }
 }

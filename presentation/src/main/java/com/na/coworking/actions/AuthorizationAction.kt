@@ -4,7 +4,8 @@ import com.na.coworking.ui.authorization.UserLoginStateUI
 
 sealed class AuthorizationAction {
     // Navigation
-    data object ToRegistration: AuthorizationAction()
+    data object ToRegistration : AuthorizationAction()
 
-    data class Authorization(val userData: UserLoginStateUI): AuthorizationAction()
+    // Event
+    data class Authorization(val userData: UserLoginStateUI) : AuthorizationAction()
 }
