@@ -14,7 +14,7 @@ internal class MainPageVM(
     private val getListOfCoworkingUseCase: GetListOfCoworkingUseCase
 ) : ViewModel() {
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             getListOfCoworkingUseCase.fetch()
         }
     }

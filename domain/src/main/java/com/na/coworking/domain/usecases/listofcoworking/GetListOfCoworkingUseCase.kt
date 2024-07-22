@@ -2,6 +2,7 @@ package com.na.coworking.domain.usecases.listofcoworking
 
 import com.na.coworking.domain.entities.Workspace
 import com.na.coworking.domain.interfaces.listofcowowking.ListOfCoworkingRepository
+import com.na.coworking.domain.usecases.runWithSupervisorInBackground
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,8 +17,10 @@ class GetListOfCoworkingUseCase(
     operator fun invoke(): Flow<List<Workspace>> = items
 
     suspend fun fetch() {
-        repository.getList().collect { list ->
-            _items.update { list }
+        runWithSupervisorInBackground {
+            repository.getList().collect { list ->
+                _items.update { list }
+            }
         }
     }
 }

@@ -15,14 +15,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.na.coworking.actions.AccountAction
 import com.na.coworking.actions.AccountEvent
 import com.na.coworking.domain.entities.Booking
-import com.na.coworking.domain.entities.LoadState
 import com.na.coworking.domain.entities.User
 import com.na.coworking.ui.account.elements.Page
 import com.na.coworking.ui.account.elements.PagerTitle
 import com.na.coworking.ui.account.elements.UserTitleBg
 import com.na.coworking.ui.account.elements.pager
 import com.na.coworking.ui.global.TopAppBar
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 @Composable
@@ -32,14 +30,14 @@ fun AccountUI(
     paddingValues: PaddingValues,
     bookings: State<List<Booking>>,
     getAction: (AccountAction) -> (() -> Unit),
-    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
+    onEvent: (AccountEvent) -> Unit
 ) {
     LazyColumn(
         contentPadding = paddingValues
     ) {
         item { UserTitleBg(user, getAction) }
         item { PagerTitle(page) }
-        pager(user, page, bookings, getEvent)
+        pager(user, page, bookings, onEvent)
     }
 }
 
@@ -94,6 +92,6 @@ private fun Preview() {
         topBar = { TopAppBar({ {} }) },
         modifier = Modifier.fillMaxSize(),
     ) {
-        AccountUI(user, page, it, state, { {} }, { { flow {} } })
+        AccountUI(user, page, it, state, { {} }, { })
     }
 }

@@ -234,5 +234,7 @@ private fun getAnnotatedSiteName(
 private fun Preview() {
     Scaffold(
         topBar = { com.na.coworking.ui.global.TopAppBar({ {} }) }
-    ) { it }
+    ) {
+        GExaText(text = "Hello!", fontSize = 24.sp, modifier = Modifier.padding(it))
+    }
 }

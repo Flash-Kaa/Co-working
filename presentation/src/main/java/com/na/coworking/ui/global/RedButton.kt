@@ -28,18 +28,22 @@ fun RedButton(
 
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 16.sp,
-    padding: Dp = 15.dp
+    padding: Dp = 15.dp,
+    isEnabled: Boolean = true
 ) {
     Box(
         modifier = modifier
             .clickable(
                 onClick = onClick,
                 interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = true, color = Color.Gray)
+                indication = rememberRipple(bounded = true, color = Color.Gray),
+                enabled = isEnabled
             )
             .shadow(4.dp, RoundedCornerShape(5.dp))
             .background(
-                color = colorResource(id = R.color.red),
+                color = colorResource(
+                    id = if (isEnabled) R.color.red else R.color.soft_gray
+                ),
                 shape = RoundedCornerShape(5.dp)
             )
             .padding(padding)

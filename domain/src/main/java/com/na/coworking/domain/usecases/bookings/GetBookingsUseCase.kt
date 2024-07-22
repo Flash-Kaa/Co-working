@@ -2,6 +2,7 @@ package com.na.coworking.domain.usecases.bookings
 
 import com.na.coworking.domain.entities.Booking
 import com.na.coworking.domain.interfaces.bookings.BookingsRepository
+import com.na.coworking.domain.usecases.runWithSupervisorInBackground
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,8 +17,10 @@ class GetBookingsUseCase(
     operator fun invoke(): Flow<List<Booking>> = items
 
     suspend fun fetch() {
-        repository.getList().collect { list ->
-            _items.update { list }
+        runWithSupervisorInBackground {
+            repository.getList().collect { list ->
+                _items.update { list }
+            }
         }
     }
 }

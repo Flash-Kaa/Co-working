@@ -31,4 +31,7 @@
     <string name="authorize">Войти</string>
     <string name="have_not_account">Нет аккаунта?</string>
     <string name="register">Зарегистрируйтесь</string>
+    <string name="close_dialog">Закрыть диалоговое окно</string>
+    <string name="cancel_unavailable">Отмена невозможна!</string>
+    <string name="booking_is_successful">Бронирование успешно подтверждено!</string>
 </resources>

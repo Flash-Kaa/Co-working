@@ -2,6 +2,7 @@ package com.na.coworking.data.bookings
 
 import com.na.coworking.domain.entities.Booking
 import com.na.coworking.domain.interfaces.bookings.BookingsDataSource
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -51,10 +52,6 @@ internal class BookingsDSImpl(
     }
 
     override suspend fun confirmBooking(bookingId: Int, code: Int) {
-        if (code != 1331) {
-            throw IllegalArgumentException("unexpected code")
-        }
-
         list = list.map {
             if (it.id == bookingId) it.copy(isConfirmed = true) else it
         }

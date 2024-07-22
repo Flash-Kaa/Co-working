@@ -45,17 +45,15 @@ import com.na.coworking.actions.AccountEvent
 import com.na.coworking.domain.entities.LoadState
 import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.RedButton
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 @Composable
 fun ConfirmBookingDialog(
     bookingId: Int,
     onDismiss: () -> Unit,
-    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
+    onEvent: (AccountEvent) -> Unit
 ) {
     val code = remember { mutableStateOf("") }
-    val isError = remember { mutableStateOf(false) }
+    val state: MutableState<LoadState> = remember { mutableStateOf(LoadState.None) }
 
     Dialog(
         onDismissRequest = onDismiss
@@ -71,11 +69,12 @@ fun ConfirmBookingDialog(
         ) {
             Title()
             DialogDescription()
-            CodeField(code, isError)
+            CodeField(code, state)
             RedButton(
                 text = stringResource(R.string.confirm_booking),
-                onClick = onConfirmAction(bookingId, code, isError, onDismiss, getEvent),
-                modifier = Modifier.fillMaxWidth()
+                onClick = onConfirmAction(bookingId, code, state, onDismiss, onEvent),
+                modifier = Modifier.fillMaxWidth(),
+                isEnabled = state.value != LoadState.Progress
             )
         }
 
@@ -129,29 +128,37 @@ private fun DialogDescription() {
 private fun onConfirmAction(
     bookingId: Int,
     code: MutableState<String>,
-    isError: MutableState<Boolean>,
+    state: MutableState<LoadState>,
     onDismiss: () -> Unit,
-    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
+    onEvent: (AccountEvent) -> Unit
 ): () -> Unit = {
     val codeIntValue = code.value.toIntOrNull()
     if (codeIntValue == null) {
-        isError.value = true
+        state.value = LoadState.Error
     } else {
-        getEvent(
+        onEvent(
             AccountEvent.OnConfirmBooking(
                 bookingId = bookingId,
-                code = codeIntValue
+                code = codeIntValue,
+                onSuccess = {
+                    state.value = LoadState.Successful
+                    onDismiss.invoke()
+                },
+                onError = {
+                    state.value = LoadState.Error
+                },
+                onProgress = {
+                    state.value = LoadState.Progress
+                }
             )
-        ).invoke()
-
-        onDismiss.invoke()
+        )
     }
 }
 
 @Composable
 private fun CodeField(
     code: MutableState<String>,
-    isError: MutableState<Boolean>
+    state: MutableState<LoadState>
 ) {
     TextField(
         value = code.value,
@@ -167,20 +174,23 @@ private fun CodeField(
             .fillMaxWidth(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         placeholder = { Placeholder() },
-        colors = getTextFieldColors(isError),
-        isError = isError.value
+        colors = getTextFieldColors(state),
+        isError = state.value != LoadState.Error,
+        enabled = state.value != LoadState.Progress
     )
 
     Spacer(modifier = Modifier.height(20.dp))
 }
 
 @Composable
-private fun getAnimationContainerColor(isError: MutableState<Boolean>): Animatable<Color, AnimationVector4D> {
+private fun getAnimationContainerColor(
+    state: MutableState<LoadState>
+): Animatable<Color, AnimationVector4D> {
     val white = colorResource(id = R.color.white)
     val red = colorResource(id = R.color.red)
     val containerColor = remember { Animatable(white) }
         .apply {
-            if (isError.value) {
+            if (state.value == LoadState.Error) {
                 LaunchedEffect(key1 = Unit) {
                     animateTo(
                         targetValue = red,
@@ -191,7 +201,7 @@ private fun getAnimationContainerColor(isError: MutableState<Boolean>): Animatab
                         animationSpec = tween(durationMillis = 400)
                     )
 
-                    isError.value = false
+                    state.value = LoadState.None
                 }
             }
         }
@@ -201,19 +211,22 @@ private fun getAnimationContainerColor(isError: MutableState<Boolean>): Animatab
 
 @Composable
 private fun getTextFieldColors(
-    isError: MutableState<Boolean>
+    state: MutableState<LoadState>
 ): TextFieldColors {
-    val containerColor = getAnimationContainerColor(isError)
+    val containerColor = getAnimationContainerColor(state)
 
     return TextFieldDefaults.colors(
         unfocusedIndicatorColor = Color.Transparent,
         focusedIndicatorColor = Color.Transparent,
+        disabledIndicatorColor = Color.Transparent,
         errorIndicatorColor = Color.Transparent,
         focusedContainerColor = containerColor.value,
         unfocusedContainerColor = containerColor.value,
+        disabledContainerColor = colorResource(id = R.color.soft_white),
         errorContainerColor = containerColor.value,
         errorTextColor = colorResource(id = R.color.soft_black),
         focusedTextColor = colorResource(id = R.color.soft_black),
+        disabledTextColor = colorResource(id = R.color.soft_gray),
         unfocusedTextColor = colorResource(id = R.color.soft_black)
     )
 }
@@ -234,7 +247,7 @@ private fun Preview() {
         ConfirmBookingDialog(
             onDismiss = { },
             bookingId = 0,
-            getEvent = { { flow { } } }
+            onEvent = { }
         )
     }
 }

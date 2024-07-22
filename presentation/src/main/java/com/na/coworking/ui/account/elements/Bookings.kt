@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,14 +36,12 @@ import androidx.compose.ui.unit.sp
 import com.na.coworking.R
 import com.na.coworking.actions.AccountEvent
 import com.na.coworking.domain.entities.Booking
-import com.na.coworking.domain.entities.LoadState
 import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.RedButton
-import kotlinx.coroutines.flow.Flow
 
 fun LazyListScope.bookings(
     bookings: State<List<Booking>>,
-    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
+    onEvent: (AccountEvent) -> Unit
 ) {
     item { Spacer(modifier = Modifier.height(10.dp)) }
 
@@ -64,7 +63,7 @@ fun LazyListScope.bookings(
                 .background(colorResource(id = R.color.soft_white))
                 .padding(horizontal = 10.dp)
         ) {
-            BookingCard(it, getEvent)
+            BookingCard(it, onEvent)
             Spacer(modifier = Modifier.height(10.dp))
         }
     }
@@ -73,7 +72,7 @@ fun LazyListScope.bookings(
 @Composable
 private fun BookingCard(
     booking: Booking,
-    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
+    onEvent: (AccountEvent) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -88,14 +87,14 @@ private fun BookingCard(
         // TODO: Booking icon
         CardImage()
 
-        CardInfo(booking, getEvent)
+        CardInfo(booking, onEvent)
     }
 }
 
 @Composable
 private fun CardInfo(
     booking: Booking,
-    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
+    onEvent: (AccountEvent) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
@@ -105,14 +104,14 @@ private fun CardInfo(
 
         Spacer(modifier = Modifier.height(5.dp))
 
-        TimeWithButtonsRow(booking, getEvent)
+        TimeWithButtonsRow(booking, onEvent)
     }
 }
 
 @Composable
 private fun TimeWithButtonsRow(
     booking: Booking,
-    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
+    onEvent: (AccountEvent) -> Unit
 ) {
     val showConfirmDialog = remember { mutableStateOf(false) }
     val showCancelDialog = remember { mutableStateOf(false) }
@@ -138,27 +137,77 @@ private fun TimeWithButtonsRow(
                 padding = 6.dp
             )
 
-            CancelBooking(
+            CancelBookingButton(
                 onClick = { showCancelDialog.value = true },
                 modifier = Modifier.weight(1f)
             )
         }
     }
 
+    DialogAction(showConfirmDialog, booking, onEvent, showCancelDialog)
+}
+
+@Composable
+private fun DialogAction(
+    showConfirmDialog: MutableState<Boolean>,
+    booking: Booking,
+    onEvent: (AccountEvent) -> Unit,
+    showCancelDialog: MutableState<Boolean>
+) {
     if (showConfirmDialog.value) {
         ConfirmBookingDialog(
             onDismiss = { showConfirmDialog.value = false },
             bookingId = booking.id,
-            getEvent = getEvent
+            onEvent = onEvent
         )
     } else if (showCancelDialog.value) {
-        CancelBookingDialog(
-            onDismiss = { showCancelDialog.value = false },
-            bookingId = booking.id,
-            getEvent = getEvent
+        CancelDialogs(booking, onEvent, showCancelDialog)
+    }
+}
+
+@Composable
+private fun CancelDialogs(
+    booking: Booking,
+    onEvent: (AccountEvent) -> Unit,
+    showCancelDialog: MutableState<Boolean>
+) {
+    val showSuccessMessage = remember { mutableStateOf(false) }
+    val showErrorMessage = remember { mutableStateOf(false) }
+    CancelBookingDialog(
+        onDismiss = { showErrorMessage.value = false },
+        bookingId = booking.id,
+        onEvent = onEvent,
+        onSuccess = {
+            showCancelDialog.value = false
+            showSuccessMessage.value = true
+        },
+        onError = {
+            showCancelDialog.value = false
+            showErrorMessage.value = true
+        }
+    )
+
+    MessageIfNeed(
+        text = stringResource(id = R.string.cancel_unavailable),
+        showMessage = showErrorMessage
+    )
+
+    MessageIfNeed(
+        text = stringResource(R.string.booking_is_successful),
+        showMessage = showSuccessMessage
+    )
+}
+
+@Composable
+private fun MessageIfNeed(text: String, showMessage: MutableState<Boolean>) {
+    if (showMessage.value) {
+        CancelMessage(
+            text = text,
+            onDismiss = { showMessage.value = false }
         )
     }
 }
+
 
 @Composable
 private fun DateWithNameRow(booking: Booking) {
@@ -197,7 +246,7 @@ private fun TextWriter(text: String, modifier: Modifier) {
 }
 
 @Composable
-private fun CancelBooking(
+private fun CancelBookingButton(
     onClick: () -> Unit,
     modifier: Modifier
 ) {

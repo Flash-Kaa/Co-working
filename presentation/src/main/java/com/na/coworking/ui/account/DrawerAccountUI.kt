@@ -11,7 +11,6 @@ import com.na.coworking.actions.AccountAction
 import com.na.coworking.actions.AccountEvent
 import com.na.coworking.appComponent
 import com.na.coworking.domain.entities.Booking
-import com.na.coworking.domain.entities.LoadState
 import com.na.coworking.domain.entities.User
 import com.na.coworking.navigation.Router
 import com.na.coworking.ui.account.elements.Page
@@ -51,7 +50,7 @@ private fun DrawerAccountUI(
     paddingValues: PaddingValues,
     bookings: Flow<List<Booking>>,
     getAction: (AccountAction) -> (() -> Unit),
-    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
+    getEvent: (AccountEvent) -> Unit
 ) {
     val page = remember { mutableStateOf(pageToOpen) }
 

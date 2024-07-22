@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.na.coworking.R
 import com.na.coworking.actions.AuthorizationAction
+import com.na.coworking.actions.AuthorizationEvent
 import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.RedButton
 
@@ -49,6 +50,7 @@ import com.na.coworking.ui.global.RedButton
 fun AuthorizationUI(
     userLogin: MutableState<UserLoginStateUI>,
     onDismiss: () -> Unit,
+    getEvent: (AuthorizationEvent) -> Unit,
     getAction: (AuthorizationAction) -> (() -> Unit)
 ) {
     Dialog(onDismissRequest = onDismiss) {
@@ -66,7 +68,10 @@ fun AuthorizationUI(
 
             RedButton(
                 text = stringResource(R.string.authorize),
-                onClick = getAction(AuthorizationAction.Authorization(userLogin.value)),
+                onClick = {
+                    // TODO: onSuccess {}, inProgress {}, onError {} (incorrect data)
+                    getEvent(AuthorizationEvent.Authorization(userLogin.value))
+                },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -261,6 +266,7 @@ private fun Preview() {
     AuthorizationUI(
         userLogin = user,
         onDismiss = { },
-        getAction = { {} }
+        getAction = { {} },
+        getEvent = {}
     )
 }

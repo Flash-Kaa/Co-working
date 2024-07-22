@@ -13,6 +13,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -29,13 +31,14 @@ import com.na.coworking.actions.AccountEvent
 import com.na.coworking.domain.entities.LoadState
 import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.RedButton
-import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun CancelBookingDialog(
     bookingId: Int,
     onDismiss: () -> Unit,
-    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
+    onError: () -> Unit,
+    onSuccess: () -> Unit,
+    onEvent: (AccountEvent) -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Column(
@@ -50,7 +53,7 @@ fun CancelBookingDialog(
             Title()
             TextContent()
 
-            AnswerButtons(bookingId, onDismiss, getEvent)
+            AnswerButtons(bookingId, onDismiss, onError, onSuccess, onEvent)
         }
 
         CancelButton(onDismiss)
@@ -61,10 +64,16 @@ fun CancelBookingDialog(
 private fun AnswerButtons(
     bookingId: Int,
     onDismiss: () -> Unit,
-    getEvent: (AccountEvent) -> (() -> Flow<LoadState>)
+    onError: () -> Unit,
+    onSuccess: () -> Unit,
+    onEvent: (AccountEvent) -> Unit
 ) {
     val spacerWeight = 1f
     val buttonWeight = 4f
+
+    val state = remember {
+        mutableStateOf(LoadState.None)
+    }
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -75,11 +84,25 @@ private fun AnswerButtons(
         RedButton(
             text = stringResource(id = R.string.yes),
             onClick = {
-                // TODO: gets event
-                getEvent(AccountEvent.OnCancelBooking(bookingId)).invoke()
-                onDismiss.invoke()
+                onEvent(
+                    AccountEvent.OnCancelBooking(
+                        bookingId = bookingId,
+                        onSuccess = {
+                            state.value = LoadState.Successful
+                            onSuccess()
+                        },
+                        onError = {
+                            state.value = LoadState.Error
+                            onError()
+                        },
+                        onProgress = {
+                            state.value = LoadState.Progress
+                        }
+                    )
+                )
             },
-            modifier = Modifier.weight(buttonWeight)
+            modifier = Modifier.weight(buttonWeight),
+            isEnabled = state.value != LoadState.Progress
         )
 
         Spacer(modifier = Modifier.weight(spacerWeight))
@@ -87,7 +110,8 @@ private fun AnswerButtons(
         RedButton(
             text = stringResource(id = R.string.no),
             onClick = onDismiss,
-            modifier = Modifier.weight(buttonWeight)
+            modifier = Modifier.weight(buttonWeight),
+            isEnabled = state.value != LoadState.Progress
         )
 
         Spacer(modifier = Modifier.weight(spacerWeight))

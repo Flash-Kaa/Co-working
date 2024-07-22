@@ -12,8 +12,11 @@ import com.na.coworking.domain.usecases.bookings.BookingCancelUseCase
 import com.na.coworking.domain.usecases.bookings.BookingConfirmUseCase
 import com.na.coworking.domain.usecases.bookings.GetBookingsUseCase
 import com.na.coworking.navigation.Router
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 internal class AccountVM(
     private val user: User,
@@ -23,7 +26,6 @@ internal class AccountVM(
     private val bookingCancel: BookingCancelUseCase,
     private val bookings: GetBookingsUseCase
 ) : ViewModel() {
-
     init {
         viewModelScope.launch {
             bookings.fetch()
@@ -38,30 +40,54 @@ internal class AccountVM(
         }
     }
 
-    fun getEvent(event: AccountEvent): () -> Flow<LoadState> {
-        return when (event) {
-            is AccountEvent.OnCancelBooking -> cancelBooking(event.bookingId)
-            is AccountEvent.OnConfirmBooking -> confirmBooking(event.bookingId, event.code)
+    fun getEvent(event: AccountEvent) {
+        when (event) {
+            is AccountEvent.OnCancelBooking -> cancelBooking(event)
+            is AccountEvent.OnConfirmBooking -> confirmBooking(event)
         }
     }
 
-    private fun cancelBooking(bookingId: Int): () -> Flow<LoadState> = {
+    private fun cancelBooking(event: AccountEvent.OnCancelBooking) {
         viewModelScope.launch {
-            bookingCancel(bookingId)
-        }
+            launch {
+                bookingCancel(event.bookingId)
+            }
 
-        bookingCancel.getResult()
+            launch {
+                val flow = bookingCancel.getResult()
+                executeEventFromFlow(flow, event)
+            }
+        }
     }
 
-    private fun confirmBooking(bookingId: Int, code: Int): () -> Flow<LoadState> = {
-        viewModelScope.launch {
-            bookingConfirm(bookingId, code)
+    private fun confirmBooking(event: AccountEvent.OnConfirmBooking) {
+        viewModelScope.launch(Dispatchers.IO) {
+            launch {
+                bookingConfirm(event.bookingId, event.code)
+            }
+
+            launch {
+                val flow = bookingConfirm.getResult()
+                executeEventFromFlow(flow, event)
+            }
         }
 
-        bookingConfirm.getResult()
     }
 
     private fun exitAccount() {}
+
+    private suspend fun executeEventFromFlow(flow: Flow<LoadState>, event: AccountEvent) {
+        flow.collectLatest {
+            withContext(Dispatchers.Main) {
+                when (it) {
+                    LoadState.Successful -> event.onSuccess()
+                    LoadState.Progress -> event.onProgress()
+                    LoadState.Error -> event.onError()
+                    LoadState.None -> {}
+                }
+            }
+        }
+    }
 
     class FactoryWrapperWithUseCases(
         private val bookingConfirm: BookingConfirmUseCase,
