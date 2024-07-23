@@ -49,6 +49,9 @@ android {
 dependencies {
     implementation(project(":domain"))
 
+    // Secure data storage
+    implementation(libs.androidx.security.crypto)
+
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)

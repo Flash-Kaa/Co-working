@@ -8,3 +8,9 @@ annotation class ListOfCoworkingRepositoryScope
 
 @Scope
 annotation class BookingsRepositoryScope
+
+@Scope
+annotation class TokenRepositoryScope
+
+@Scope
+annotation class AuthRepositoryScope

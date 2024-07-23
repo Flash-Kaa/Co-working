@@ -174,7 +174,7 @@ private fun CancelDialogs(
     val showSuccessMessage = remember { mutableStateOf(false) }
     val showErrorMessage = remember { mutableStateOf(false) }
     CancelBookingDialog(
-        onDismiss = { showErrorMessage.value = false },
+        onDismiss = { showCancelDialog.value = false },
         bookingId = booking.id,
         onEvent = onEvent,
         onSuccess = {
