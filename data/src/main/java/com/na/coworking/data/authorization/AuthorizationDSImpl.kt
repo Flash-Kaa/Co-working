@@ -7,7 +7,7 @@ import kotlinx.coroutines.delay
 
 internal class AuthorizationDSImpl(
     // TODO: private val service: AuthorizationService
-): AuthorizationDataSource {
+) : AuthorizationDataSource {
     override suspend fun authorize(data: AuthorizationData): Token {
         delay(1000L)
         if (data.login != "login" || data.password != "password") {

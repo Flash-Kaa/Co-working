@@ -7,7 +7,7 @@ import com.na.coworking.domain.interfaces.authorization.AuthorizationRepository
 
 class AuthorizationRepoImpl(
     private val dataSource: AuthorizationDataSource
-): AuthorizationRepository {
+) : AuthorizationRepository {
     override suspend fun authorize(data: AuthorizationData): Token {
         return dataSource.authorize(data)
     }

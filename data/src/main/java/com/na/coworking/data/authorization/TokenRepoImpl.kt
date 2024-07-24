@@ -6,7 +6,7 @@ import com.na.coworking.domain.interfaces.authorization.TokenRepository
 
 class TokenRepoImpl(
     private val dataSource: TokenDataSource
-): TokenRepository {
+) : TokenRepository {
     override suspend fun getToken(): Token {
         return dataSource.getToken()
     }

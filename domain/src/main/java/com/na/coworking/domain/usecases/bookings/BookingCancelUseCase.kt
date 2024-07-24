@@ -12,19 +12,19 @@ import kotlinx.coroutines.flow.update
 class BookingCancelUseCase(
     private val repository: BookingsRepository
 ) {
-    private val _items: MutableStateFlow<LoadState> = MutableStateFlow(LoadState.Progress)
-    val items: StateFlow<LoadState> = _items.asStateFlow()
+    private val _state: MutableStateFlow<LoadState> = MutableStateFlow(LoadState.None)
+    val state: StateFlow<LoadState> = _state.asStateFlow()
 
     suspend operator fun invoke(id: Int) {
-        _items.update { LoadState.Progress }
+        _state.update { LoadState.Progress }
 
         runWithSupervisorInBackground(
-            onErrorAction = { _items.update { LoadState.Error } }
+            onErrorAction = { _state.update { LoadState.Error } }
         ) {
             repository.cancelBooking(id)
-            _items.update { LoadState.Successful }
+            _state.update { LoadState.Successful }
         }
     }
 
-    fun getResult(): Flow<LoadState> = items
+    fun getResult(): Flow<LoadState> = state
 }

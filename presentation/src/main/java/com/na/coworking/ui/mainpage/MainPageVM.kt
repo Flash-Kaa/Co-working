@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.na.coworking.actions.MainPageAction
 import com.na.coworking.domain.usecases.listofcoworking.GetListOfCoworkingUseCase
 import com.na.coworking.navigation.Router
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class MainPageVM(
