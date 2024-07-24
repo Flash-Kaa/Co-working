@@ -47,7 +47,7 @@ import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.RedButton
 
 @Composable
-fun ConfirmBookingDialog(
+internal fun ConfirmBookingDialog(
     bookingId: Int,
     onDismiss: () -> Unit,
     onEvent: (AccountEvent) -> Unit

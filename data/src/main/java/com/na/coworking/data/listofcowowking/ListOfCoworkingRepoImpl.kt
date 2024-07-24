@@ -11,4 +11,8 @@ class ListOfCoworkingRepoImpl(
     override suspend fun getList(): Flow<List<Workspace>> {
         return dataSource.getList()
     }
+
+    override suspend fun getById(id: Int): Workspace {
+        return dataSource.getById(id)
+    }
 }

@@ -1,6 +1,6 @@
 package com.na.coworking.actions
 
-sealed class GlobalAction {
+internal sealed class GlobalAction {
     // Navigation
     data object ToPersonAccount : GlobalAction()
     data object ToListOfCoworking : GlobalAction()

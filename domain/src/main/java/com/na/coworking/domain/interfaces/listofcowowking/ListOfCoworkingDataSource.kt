@@ -5,4 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ListOfCoworkingDataSource {
     suspend fun getList(): Flow<List<Workspace>>
+
+    suspend fun getById(id: Int): Workspace
 }

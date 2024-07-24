@@ -39,7 +39,7 @@ import com.na.coworking.domain.entities.Booking
 import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.RedButton
 
-fun LazyListScope.bookings(
+internal fun LazyListScope.bookings(
     bookings: State<List<Booking>>,
     onEvent: (AccountEvent) -> Unit
 ) {

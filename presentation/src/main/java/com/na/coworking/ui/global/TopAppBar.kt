@@ -43,7 +43,7 @@ import com.na.coworking.actions.GlobalAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBar(
+internal fun TopAppBar(
     isOpen: MutableState<Boolean>,
     getAction: (GlobalAction) -> (() -> Unit)
 ) {

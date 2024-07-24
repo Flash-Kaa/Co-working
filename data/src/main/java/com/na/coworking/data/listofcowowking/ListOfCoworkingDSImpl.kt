@@ -12,7 +12,7 @@ internal class ListOfCoworkingDSImpl(
 ) : ListOfCoworkingDataSource {
     private val hardData = listOf(
         Workspace(
-            id = 1234,
+            id = 245,
             name = "Радиоточка",
             description = "– это удобные столы, мягкие диваны, много подушек. Это первый коворкинг, в котором расположена точка питания. Здесь студенты могут не только подготовиться к учебным занятиям, но и вкусно перекусить, пообедать. ",
             address = "Ул. Мира, 32",
@@ -21,7 +21,7 @@ internal class ListOfCoworkingDSImpl(
             images = listOf(Workspace.Image(12, ""), Workspace.Image(123, ""))
         ),
         Workspace(
-            id = 1234,
+            id = 12323,
             name = "Радиоточка",
             description = "– это удобные столы, мягкие диваны, много подушек. Это первый коворкинг, в котором расположена точка питания. Здесь студенты могут не только подготовиться к учебным занятиям, но и вкусно перекусить, пообедать. ",
             address = "Ул. Мира, 32",
@@ -60,5 +60,9 @@ internal class ListOfCoworkingDSImpl(
     override suspend fun getList(): Flow<List<Workspace>> {
         // TODO: _items.update { service.get() }
         return items
+    }
+
+    override suspend fun getById(id: Int): Workspace {
+        return items.value.first { it.id == id }
     }
 }

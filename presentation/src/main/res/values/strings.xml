@@ -35,4 +35,10 @@
     <string name="cancel_unavailable">Отмена невозможна!</string>
     <string name="booking_is_successful">Бронирование успешно подтверждено!</string>
     <string name="cancel_successful">Отмена подтверждена!</string>
+    <string name="about_coworking">О пространстве</string>
+    <string name="amenities_for_you">Удобства для вас</string>
+    <string name="coworking_contacts">Контакты коворкинга</string>
+    <string name="address">"Адрес: "</string>
+    <string name="weekend">Выходной</string>
+    <string name="coworking_scheme">Схема помещения</string>
 </resources>

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.na.coworking.actions.GlobalAction
 import com.na.coworking.navigation.Router
 
-class GlobalViewModel(
+internal class GlobalViewModel(
     private val router: Router
 ) : ViewModel() {
     fun getAction(action: GlobalAction): () -> Unit {

@@ -33,7 +33,7 @@ import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.RedButton
 
 @Composable
-fun CancelBookingDialog(
+internal fun CancelBookingDialog(
     bookingId: Int,
     onDismiss: () -> Unit,
     onError: () -> Unit,

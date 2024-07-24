@@ -8,7 +8,7 @@ import com.na.coworking.domain.entities.Booking
 import com.na.coworking.domain.entities.User
 
 
-fun LazyListScope.pager(
+internal fun LazyListScope.pager(
     user: User,
     page: MutableState<Page>,
     bookings: State<List<Booking>>,

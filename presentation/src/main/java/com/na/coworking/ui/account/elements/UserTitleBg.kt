@@ -35,7 +35,7 @@ import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.GTeraText
 
 @Composable
-fun UserTitleBg(
+internal fun UserTitleBg(
     user: User,
     getAction: (AccountAction) -> (() -> Unit)
 ) {

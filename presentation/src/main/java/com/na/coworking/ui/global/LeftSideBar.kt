@@ -40,7 +40,7 @@ private const val CLOSE_COEF = 0.6f
 
 
 @Composable
-fun LeftSideBar(
+internal fun LeftSideBar(
     isOpen: MutableState<Boolean>,
     getAction: (GlobalAction) -> () -> Unit
 ) {

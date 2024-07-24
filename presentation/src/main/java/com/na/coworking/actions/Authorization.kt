@@ -1,11 +1,11 @@
 package com.na.coworking.actions
 
-sealed class AuthorizationAction {
+internal sealed class AuthorizationAction {
     // Navigation
     data object ToRegistration : AuthorizationAction()
 }
 
-sealed class AuthorizationEvent(
+internal sealed class AuthorizationEvent(
     open val onError: () -> Unit,
     open val onSuccess: () -> Unit,
     open val onProgress: () -> Unit

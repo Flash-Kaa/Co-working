@@ -24,7 +24,7 @@ import com.na.coworking.ui.global.TopAppBar
 import kotlinx.coroutines.flow.flow
 
 @Composable
-fun AccountUI(
+internal fun AccountUI(
     user: User,
     page: MutableState<Page>,
     paddingValues: PaddingValues,

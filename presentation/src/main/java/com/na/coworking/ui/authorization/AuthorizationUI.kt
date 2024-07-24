@@ -52,7 +52,7 @@ import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.RedButton
 
 @Composable
-fun AuthorizationUI(
+internal fun AuthorizationUI(
     userLogin: MutableState<UserLoginStateUI>,
     getEvent: (AuthorizationEvent) -> Unit,
     getAction: (AuthorizationAction) -> (() -> Unit)

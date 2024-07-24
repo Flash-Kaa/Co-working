@@ -6,8 +6,8 @@ data class Amenity(
 ) {
     data class Template(
         val id: Int,
-        val picture: String? = null,
         val name: String,
-        val category: String
+        val category: String,
+        val picture: String? = null
     )
 }

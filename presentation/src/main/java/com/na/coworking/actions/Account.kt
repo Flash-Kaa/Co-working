@@ -1,10 +1,10 @@
 package com.na.coworking.actions
 
-sealed class AccountAction {
+internal sealed class AccountAction {
     data object OnExit : AccountAction()
 }
 
-sealed class AccountEvent(
+internal sealed class AccountEvent(
     open val onError: () -> Unit,
     open val onSuccess: () -> Unit,
     open val onProgress: () -> Unit
