@@ -8,6 +8,7 @@ import com.na.coworking.actions.AccountEvent
 import com.na.coworking.domain.entities.Booking
 import com.na.coworking.domain.entities.LoadState
 import com.na.coworking.domain.entities.User
+import com.na.coworking.domain.usecases.authorization.LogoutUseCase
 import com.na.coworking.domain.usecases.bookings.BookingCancelUseCase
 import com.na.coworking.domain.usecases.bookings.BookingConfirmUseCase
 import com.na.coworking.domain.usecases.bookings.GetBookingsUseCase
@@ -19,12 +20,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 internal class AccountVM(
-    private val user: User,
     private val router: Router,
 
     private val bookingConfirm: BookingConfirmUseCase,
     private val bookingCancel: BookingCancelUseCase,
-    private val bookings: GetBookingsUseCase
+    private val bookings: GetBookingsUseCase,
+
+    private val logout: LogoutUseCase
 ) : ViewModel() {
     init {
         viewModelScope.launch {
@@ -54,7 +56,7 @@ internal class AccountVM(
             }
 
             launch {
-                val flow = bookingCancel.getResult()
+                val flow = bookingCancel.state
                 executeEventFromFlow(flow, event)
             }
         }
@@ -67,14 +69,17 @@ internal class AccountVM(
             }
 
             launch {
-                val flow = bookingConfirm.getResult()
+                val flow = bookingConfirm.state
                 executeEventFromFlow(flow, event)
             }
         }
 
     }
 
-    private fun exitAccount() {}
+    private fun exitAccount() {
+        router.navigateToAuthorizationWithSetStartDestination()
+        viewModelScope.launch { logout() }
+    }
 
     private suspend fun executeEventFromFlow(flow: Flow<LoadState>, event: AccountEvent) {
         flow.collectLatest {
@@ -92,20 +97,20 @@ internal class AccountVM(
     class FactoryWrapperWithUseCases(
         private val bookingConfirm: BookingConfirmUseCase,
         private val bookingCancel: BookingCancelUseCase,
-        private val bookings: GetBookingsUseCase
+        private val bookings: GetBookingsUseCase,
+        private val logout: LogoutUseCase
     ) {
         inner class Factory(
-            private val user: User,
             private val router: Router
         ) : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return AccountVM(
-                    user = user,
                     router = router,
                     bookingConfirm = bookingConfirm,
                     bookingCancel = bookingCancel,
-                    bookings = bookings
+                    bookings = bookings,
+                    logout = logout
                 ) as T
             }
         }

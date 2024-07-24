@@ -16,12 +16,14 @@ internal class TokenDSImpl(context: Context) : TokenDataSource {
     )
 
     override suspend fun getToken(): Token {
-        val value = storage.getString(StorageKeys.TokenValue.toString(), "") ?: ""
-        return Token(value)
+        val value = storage.getString(StorageKeys.TokenValue.toString(), null)
+            ?: return Token(Token.State.NoValue)
+
+        return Token(Token.State.HasLogin(value))
     }
 
     override suspend fun updateToken(token: Token) {
-        storage.edit().putString(StorageKeys.TokenValue.toString(), token.value).apply()
+        storage.edit().putString(StorageKeys.TokenValue.toString(), token.value.login).apply()
     }
 
     private enum class StorageKeys {

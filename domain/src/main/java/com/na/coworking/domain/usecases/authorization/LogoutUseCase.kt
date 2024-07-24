@@ -4,12 +4,12 @@ import com.na.coworking.domain.entities.Token
 import com.na.coworking.domain.interfaces.authorization.TokenRepository
 import com.na.coworking.domain.usecases.runWithSupervisorInBackground
 
-class UpdateTokenUseCase(
+class LogoutUseCase(
     private val repository: TokenRepository
 ) {
-    suspend operator fun invoke(token: Token) {
+    suspend operator fun invoke() {
         runWithSupervisorInBackground {
-            repository.updateToken(token)
+            repository.updateToken(Token(Token.State.NoValue))
         }
     }
 }

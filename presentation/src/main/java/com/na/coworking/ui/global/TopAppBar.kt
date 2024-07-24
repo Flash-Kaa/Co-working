@@ -45,12 +45,9 @@ import com.na.coworking.actions.GlobalAction
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBar(
+    isOpen: MutableState<Boolean>,
     getAction: (GlobalAction) -> (() -> Unit)
 ) {
-    val isOpen = remember {
-        mutableStateOf(false)
-    }
-
     TopAppBar(
         title = { Title(onClick = getAction(GlobalAction.ToMainPage)) },
         modifier = Modifier.shadow(3.dp),
@@ -58,8 +55,6 @@ fun TopAppBar(
             ActionList(getAction, isOpen)
         },
     )
-
-    SideBar(isOpen, getAction)
 }
 
 @Composable
@@ -81,38 +76,6 @@ private fun ActionList(
 
     NavigationIcon {
         isOpen.value = true
-    }
-}
-
-@Composable
-private fun SideBar(
-    isOpen: MutableState<Boolean>,
-    getAction: (GlobalAction) -> () -> Unit
-) {
-    LeftSideBar(isOpen = isOpen) {
-        Column {
-            LeftSizeTextButton(
-                text = stringResource(R.string.personal_account),
-                onClick = {
-                    getAction(GlobalAction.ToPersonAccount).invoke()
-                    isOpen.value = false
-                }
-            )
-            LeftSizeTextButton(
-                text = stringResource(R.string.coworkings),
-                onClick = {
-                    getAction(GlobalAction.ToListOfCoworking).invoke()
-                    isOpen.value = false
-                }
-            )
-            LeftSizeTextButton(
-                text = stringResource(R.string.contacts),
-                onClick = {
-                    getAction(GlobalAction.ToContacts).invoke()
-                    isOpen.value = false
-                }
-            )
-        }
     }
 }
 
@@ -197,19 +160,6 @@ private fun Description(modifier: Modifier) {
     )
 }
 
-@Composable
-private fun LeftSizeTextButton(
-    text: String,
-    onClick: () -> Unit
-) {
-    TextButton(onClick = onClick) {
-        GExaText(
-            text = text,
-            fontSize = 18.sp
-        )
-    }
-}
-
 private fun getAnnotatedSiteName(
     primaryColor: Color,
     secondaryColor: Color
@@ -232,8 +182,12 @@ private fun getAnnotatedSiteName(
 @Preview(showBackground = false)
 @Composable
 private fun Preview() {
+    val isOpen = remember {
+        mutableStateOf(false)
+    }
+
     Scaffold(
-        topBar = { com.na.coworking.ui.global.TopAppBar({ {} }) }
+        topBar = { TopAppBar(isOpen, { {} }) }
     ) {
         GExaText(text = "Hello!", fontSize = 24.sp, modifier = Modifier.padding(it))
     }

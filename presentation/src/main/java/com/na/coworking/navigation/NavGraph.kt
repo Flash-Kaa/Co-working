@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.na.coworking.ui.account.DrawerAccountUI
 import com.na.coworking.ui.account.elements.Page
+import com.na.coworking.ui.authorization.DrawerAuthorizationUI
 import com.na.coworking.ui.mainpage.DrawerMainUI
 
 private val coworkingIdArguments = listOf(
@@ -25,18 +26,18 @@ fun NavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = NavScreen.MainPage.route
+        startDestination = NavScreen.Authorization.route
     ) {
-        composable(NavScreen.MainPage.route) {
-            DrawerMainUI(router, padding)
-        }
+        composable(NavScreen.Authorization.route) { DrawerAuthorizationUI(router) }
+        composable(NavScreen.MainPage.route) { DrawerMainUI(router, padding) }
+        composable(NavScreen.Contacts.route) {}
+
         composable(NavScreen.PersonalAccount.route) {
             DrawerAccountUI(Page.Profile, router, padding)
         }
         composable(NavScreen.ListOfCoworking.route) {
             DrawerAccountUI(Page.Booking, router, padding)
         }
-        composable(NavScreen.Contacts.route) {}
 
         composable(
             "${NavScreen.Workspace.route}/{workspaceId}", coworkingIdArguments

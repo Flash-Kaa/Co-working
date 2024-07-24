@@ -25,6 +25,4 @@ class BookingCancelUseCase(
             _state.update { LoadState.Successful }
         }
     }
-
-    fun getResult(): Flow<LoadState> = state
 }

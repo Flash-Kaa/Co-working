@@ -13,7 +13,7 @@ suspend fun runWithSupervisorInBackground(
 ) {
     supervisorScope {
         launch(
-            context = Dispatchers.IO + CoroutineExceptionHandler { _, e ->
+            context = Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
                 onErrorAction?.invoke()
             },
             block = content

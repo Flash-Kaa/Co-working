@@ -1,5 +1,9 @@
 package com.na.coworking.ui.authorization
 
+import androidx.compose.animation.Animatable
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector4D
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,12 +19,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,17 +47,21 @@ import androidx.compose.ui.window.Dialog
 import com.na.coworking.R
 import com.na.coworking.actions.AuthorizationAction
 import com.na.coworking.actions.AuthorizationEvent
+import com.na.coworking.domain.entities.LoadState
 import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.RedButton
 
 @Composable
 fun AuthorizationUI(
     userLogin: MutableState<UserLoginStateUI>,
-    onDismiss: () -> Unit,
     getEvent: (AuthorizationEvent) -> Unit,
     getAction: (AuthorizationAction) -> (() -> Unit)
 ) {
-    Dialog(onDismissRequest = onDismiss) {
+    val state = remember {
+        mutableStateOf(LoadState.None)
+    }
+
+    Dialog(onDismissRequest = { }) {
         Column(
             modifier = Modifier
                 .shadow(2.dp, RoundedCornerShape(10.dp))
@@ -64,21 +72,24 @@ fun AuthorizationUI(
                 .padding(16.dp)
         ) {
             Title()
-            Fields(userLogin)
+            Fields(userLogin, state)
 
             RedButton(
                 text = stringResource(R.string.authorize),
                 onClick = {
-                    // TODO: onSuccess {}, inProgress {}, onError {} (incorrect data)
-                    getEvent(AuthorizationEvent.Authorization(userLogin.value))
+                    getEvent(
+                        AuthorizationEvent.Authorization(
+                            onError = { state.value = LoadState.Error },
+                            onProgress = { state.value = LoadState.Progress }
+                        )
+                    )
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isEnabled = state.value != LoadState.Progress
             )
 
             Register(getAction)
         }
-
-        CancelButton(onDismiss)
     }
 }
 
@@ -129,18 +140,24 @@ private fun Title() {
 }
 
 @Composable
-private fun Fields(userLogin: MutableState<UserLoginStateUI>) {
-    val passwordIsVisible = remember {
-        mutableStateOf(false)
-    }
+private fun Fields(
+    userLogin: MutableState<UserLoginStateUI>,
+    state: MutableState<LoadState>
+) {
+    val passwordIsVisible = remember { mutableStateOf(false) }
 
-    InputField(userLogin.value.login, stringResource(R.string.login)) {
+    InputField(
+        value = userLogin.value.login,
+        placeholderText = stringResource(R.string.login),
+        state = state
+    ) {
         userLogin.value = userLogin.value.copy(login = it)
     }
 
     InputField(
         value = userLogin.value.password,
         placeholderText = stringResource(R.string.password),
+        state = state,
         isVisible = passwordIsVisible
     ) {
         userLogin.value = userLogin.value.copy(password = it)
@@ -153,6 +170,7 @@ private fun Fields(userLogin: MutableState<UserLoginStateUI>) {
 private fun InputField(
     value: String,
     placeholderText: String,
+    state: MutableState<LoadState>,
     isVisible: MutableState<Boolean>? = null,
     onValueChange: (String) -> Unit
 ) {
@@ -177,8 +195,9 @@ private fun InputField(
             .fillMaxWidth(),
         trailingIcon = { TrailingIcon(isVisible) },
         placeholder = { Placeholder(placeholderText) },
-        colors = getTextFieldColors(),
-        visualTransformation = visualTransformation
+        colors = getTextFieldColors(state),
+        visualTransformation = visualTransformation,
+        enabled = state.value != LoadState.Progress
     )
 
     Spacer(modifier = Modifier.height(10.dp))
@@ -221,40 +240,53 @@ private fun Placeholder(text: String) {
 }
 
 @Composable
-private fun getTextFieldColors(): TextFieldColors {
+private fun getTextFieldColors(
+    state: MutableState<LoadState>
+): TextFieldColors {
+    val containerColor = getAnimationContainerColor(state)
+
     return TextFieldDefaults.colors(
         unfocusedIndicatorColor = Color.Transparent,
         focusedIndicatorColor = Color.Transparent,
+        disabledIndicatorColor = Color.Transparent,
         errorIndicatorColor = Color.Transparent,
-        focusedContainerColor = colorResource(id = R.color.white),
-        unfocusedContainerColor = colorResource(id = R.color.white),
-        errorContainerColor = colorResource(id = R.color.white),
+        focusedContainerColor = containerColor.value,
+        disabledContainerColor = colorResource(id = R.color.soft_white),
+        unfocusedContainerColor = containerColor.value,
+        errorContainerColor = containerColor.value,
         errorTextColor = colorResource(id = R.color.soft_black),
         focusedTextColor = colorResource(id = R.color.soft_black),
+        disabledTextColor = colorResource(id = R.color.soft_black),
         unfocusedTextColor = colorResource(id = R.color.soft_black)
     )
 }
 
 @Composable
-private fun CancelButton(onDismiss: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(0.dp),
-        contentAlignment = Alignment.CenterEnd
-    ) {
-        IconButton(onClick = onDismiss) {
-            Icon(
-                imageVector = ImageVector.vectorResource(id = R.drawable.baseline_close_24),
-                contentDescription = stringResource(R.string.not_cancel),
-                tint = colorResource(id = R.color.soft_black)
-            )
+private fun getAnimationContainerColor(
+    state: MutableState<LoadState>
+): Animatable<Color, AnimationVector4D> {
+    val white = colorResource(id = R.color.white)
+    val red = colorResource(id = R.color.red)
+    val containerColor = remember { Animatable(white) }
+        .apply {
+            if (state.value == LoadState.Error) {
+                LaunchedEffect(key1 = Unit) {
+                    animateTo(
+                        targetValue = red,
+                        animationSpec = tween(durationMillis = 600)
+                    )
+                    animateTo(
+                        targetValue = white,
+                        animationSpec = tween(durationMillis = 400)
+                    )
+
+                    state.value = LoadState.None
+                }
+            }
         }
-    }
 
-    Spacer(modifier = Modifier.height(20.dp))
+    return containerColor
 }
-
 
 @Preview(showBackground = true)
 @Composable
@@ -265,7 +297,6 @@ private fun Preview() {
 
     AuthorizationUI(
         userLogin = user,
-        onDismiss = { },
         getAction = { {} },
         getEvent = {}
     )

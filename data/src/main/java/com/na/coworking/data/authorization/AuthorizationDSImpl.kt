@@ -14,6 +14,6 @@ internal class AuthorizationDSImpl(
             throw IllegalArgumentException("unexpected auth with hard data")
         }
 
-        return Token(data.login + data.password)
+        return Token(Token.State.HasLogin(data.login + data.password))
     }
 }

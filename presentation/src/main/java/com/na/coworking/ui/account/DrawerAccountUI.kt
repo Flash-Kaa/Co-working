@@ -30,7 +30,7 @@ fun DrawerAccountUI(
             .appComponent
             .getAccountVMSubcomponent()
             .provideFactoryWrapper()
-            .Factory(user, router)
+            .Factory(router)
     )
 
     DrawerAccountUI(

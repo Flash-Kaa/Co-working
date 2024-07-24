@@ -88,8 +88,12 @@ private fun Preview() {
 
     val state = flow { emit(list) }.collectAsState(initial = emptyList())
 
+    val sizeBarIsOpen = remember {
+        mutableStateOf(false)
+    }
+
     Scaffold(
-        topBar = { TopAppBar({ {} }) },
+        topBar = { TopAppBar(sizeBarIsOpen, { {} }) },
         modifier = Modifier.fillMaxSize(),
     ) {
         AccountUI(user, page, it, state, { {} }, { })

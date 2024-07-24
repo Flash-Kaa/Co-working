@@ -1,5 +1,7 @@
 package com.na.coworking.di.modules.account
 
+import android.content.Context
+import com.na.coworking.appComponent
 import com.na.coworking.data.di.BookingsRepositoryScope
 import com.na.coworking.domain.usecases.bookings.BookingCancelUseCase
 import com.na.coworking.domain.usecases.bookings.BookingConfirmUseCase
@@ -15,10 +17,12 @@ internal class AccountViewModelFactoryModule {
     fun provideViewModel(
         getBookingsUseCase: GetBookingsUseCase,
         cancelUseCase: BookingCancelUseCase,
-        confirmUseCase: BookingConfirmUseCase
+        confirmUseCase: BookingConfirmUseCase,
+        context: Context
     ): AccountVM.FactoryWrapperWithUseCases = AccountVM.FactoryWrapperWithUseCases(
         bookings = getBookingsUseCase,
         bookingConfirm = confirmUseCase,
-        bookingCancel = cancelUseCase
+        bookingCancel = cancelUseCase,
+        logout = context.appComponent.getTokenUseCasesSubcomponent().provideLogoutUseCase()
     )
 }
