@@ -16,9 +16,10 @@ import androidx.compose.ui.unit.dp
 import com.na.coworking.domain.entities.Amenity
 import com.na.coworking.domain.entities.OperationMode
 import com.na.coworking.domain.entities.Workspace
+import com.na.coworking.domain.entities.WorkspaceObject
 import com.na.coworking.ui.coworking.elements.Address
 import com.na.coworking.ui.coworking.elements.Amenities
-import com.na.coworking.ui.coworking.elements.CoworkingScheme
+import com.na.coworking.ui.coworking.elements.CoworkingSchemeWithTitle
 import com.na.coworking.ui.coworking.elements.Description
 import com.na.coworking.ui.coworking.elements.ImagePager
 import com.na.coworking.ui.coworking.elements.OperatingMode
@@ -40,7 +41,7 @@ fun CoworkingUI(
         item { Amenities(coworking) }
         item { Address(coworking) }
         item { OperatingMode(coworking) }
-        item { CoworkingScheme(coworking) }
+        item { CoworkingSchemeWithTitle(coworking) }
         item { Spacer(modifier = Modifier.height(50.dp)) }
     }
 }
@@ -48,6 +49,8 @@ fun CoworkingUI(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewCoworkingUI() {
+    val wot = WorkspaceObject.Template(0, "", "", false)
+
     val coworking = remember {
         mutableStateOf(
             Workspace(
@@ -74,6 +77,13 @@ private fun PreviewCoworkingUI() {
                     OperationMode(0, "9-00", "20:30", 4),
                     OperationMode(0, "10-00", "23:50", 5),
                     OperationMode(0, "10-00", "23:50", 6),
+                ),
+                objects = listOf(
+                    WorkspaceObject(0, 0, 0, 100, 100, wot),
+                    WorkspaceObject(1, 100, 0, 100, 100, wot),
+                    WorkspaceObject(1, 0, 100, 100, 100, wot),
+                    WorkspaceObject(2, 100, 100, 200, 200, wot),
+                    WorkspaceObject(1, 310, 200, 110, 100, wot),
                 )
             )
         )
