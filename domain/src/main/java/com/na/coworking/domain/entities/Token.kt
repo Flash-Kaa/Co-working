@@ -4,7 +4,7 @@ data class Token(
     val value: State = State.NoValue
 ) {
     sealed class State(val login: String?) {
-        data class HasLogin(val value: String): State(value)
-        data object NoValue: State(null)
+        data class HasLogin(val value: String) : State(value)
+        data object NoValue : State(null)
     }
 }

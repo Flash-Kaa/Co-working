@@ -178,32 +178,39 @@ private fun CancelDialogs(
         bookingId = booking.id,
         onEvent = onEvent,
         onSuccess = {
-            showCancelDialog.value = false
             showSuccessMessage.value = true
         },
         onError = {
-            showCancelDialog.value = false
             showErrorMessage.value = true
         }
     )
 
     MessageIfNeed(
         text = stringResource(id = R.string.cancel_unavailable),
-        showMessage = showErrorMessage
+        showMessage = showErrorMessage,
+        showCancelDialog = showCancelDialog
     )
 
     MessageIfNeed(
-        text = stringResource(R.string.booking_is_successful),
-        showMessage = showSuccessMessage
+        text = stringResource(R.string.cancel_successful),
+        showMessage = showSuccessMessage,
+        showCancelDialog = showCancelDialog
     )
 }
 
 @Composable
-private fun MessageIfNeed(text: String, showMessage: MutableState<Boolean>) {
+private fun MessageIfNeed(
+    text: String,
+    showMessage: MutableState<Boolean>,
+    showCancelDialog: MutableState<Boolean>
+) {
     if (showMessage.value) {
         CancelMessage(
             text = text,
-            onDismiss = { showMessage.value = false }
+            onDismiss = {
+                showMessage.value = false
+                showCancelDialog.value = false
+            }
         )
     }
 }

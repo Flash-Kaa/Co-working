@@ -34,4 +34,5 @@
     <string name="close_dialog">Закрыть диалоговое окно</string>
     <string name="cancel_unavailable">Отмена невозможна!</string>
     <string name="booking_is_successful">Бронирование успешно подтверждено!</string>
+    <string name="cancel_successful">Отмена подтверждена!</string>
 </resources>

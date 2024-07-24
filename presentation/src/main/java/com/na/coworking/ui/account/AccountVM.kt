@@ -7,7 +7,6 @@ import com.na.coworking.actions.AccountAction
 import com.na.coworking.actions.AccountEvent
 import com.na.coworking.domain.entities.Booking
 import com.na.coworking.domain.entities.LoadState
-import com.na.coworking.domain.entities.User
 import com.na.coworking.domain.usecases.authorization.LogoutUseCase
 import com.na.coworking.domain.usecases.bookings.BookingCancelUseCase
 import com.na.coworking.domain.usecases.bookings.BookingConfirmUseCase
