@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import com.na.coworking.R
 import com.na.coworking.ui.coworking.BookingStateUI
 import com.na.coworking.ui.global.GExaText
+import com.na.coworking.ui.global.RedButton
 
 @Composable
 fun FirstPageContent(
@@ -66,7 +67,12 @@ private fun NextButton(onNextPage: () -> Unit, canNext: Boolean) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.End
     ) {
-        NavButton(onNextPage, canNext, Modifier.fillMaxWidth(0.45f))
+        RedButton(
+            text = stringResource(R.string.continue_str),
+            onClick = onNextPage,
+            isEnabled = canNext,
+            modifier = Modifier.fillMaxWidth(0.45f)
+        )
     }
 }
 
@@ -227,7 +233,7 @@ private fun ChooseItem(
             )
             .padding(5.dp)
     ) {
-        GExaText(text = text, fontSize = 13.sp)
+        GExaText(text = text, fontSize = 16.sp)
     }
 }
 

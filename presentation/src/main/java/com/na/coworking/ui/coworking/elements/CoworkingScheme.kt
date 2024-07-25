@@ -6,8 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,7 +27,7 @@ import com.na.coworking.domain.entities.WorkspaceObject
 @Composable
 fun CoworkingScheme(
     templates: List<WorkspaceObject>,
-    onClick: (() -> Unit)? = null
+    onClick: ((WorkspaceObject) -> Unit)? = null
 ) {
     Box(
         modifier = Modifier
@@ -55,12 +57,13 @@ fun CoworkingScheme(
 @Composable
 private fun TemplatesDrawer(
     templates: List<WorkspaceObject>,
-    onClick: (() -> Unit)?
+    onClick: ((WorkspaceObject) -> Unit)?
 ) {
     BoxWithConstraints(
         modifier = Modifier.fillMaxWidth()
     ) {
-        val scale = constraints.maxWidth.toFloat() / templates.maxOf { it.x + it.width.toFloat() }
+        val width = templates.maxOf { it.x + it.width.toFloat() }
+        val scale = constraints.maxWidth.toFloat() / width
 
         for (template in templates) {
             // TODO: use image
@@ -72,28 +75,29 @@ private fun TemplatesDrawer(
     }
 }
 
-
 @Composable
 private fun Modifier.scaledImage(
     template: WorkspaceObject,
     scale: Float,
-    onClick: (() -> Unit)? = null
+    onClick: ((WorkspaceObject) -> Unit)? = null
 ): Modifier {
-    val clickableOrNot =
-        if (onClick == null) {
-            this
-        } else {
-            this.clickable(
-                onClick = onClick,
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = true, color = Color.Gray)
-            )
-        }
-
-
+    val modifier = this
     with(LocalDensity.current) {
+        val offset =
+            modifier.padding(start = (template.x * scale).toDp(), top = (template.y * scale).toDp())
+
+        val clickableOrNot =
+            if (onClick == null) {
+                offset
+            } else {
+                offset.clickable(
+                    onClick = { onClick(template) },
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = rememberRipple(bounded = true, color = Color.Gray)
+                )
+            }
+
         return clickableOrNot
-            .padding(start = (template.x * scale).toDp(), top = (template.y * scale).toDp())
             .background(color = if (template.id == 0) Color.Red else if (template.id == 1) Color.Blue else Color.Green)
             .height((template.height * scale).toDp())
             .width((template.width * scale).toDp())

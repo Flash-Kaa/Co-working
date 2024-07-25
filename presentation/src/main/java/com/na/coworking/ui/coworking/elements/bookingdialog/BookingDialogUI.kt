@@ -44,9 +44,9 @@ private const val PROGRESS_BAR_STEP = 1f
 @Composable
 fun BookingDialogUI(
     state: MutableState<BookingStateUI>,
-    templates: MutableState<List<WorkspaceObject>>,
     timesRangesToBooking: List<String>,
     daysToBooking: List<String>,
+    getTemplates: (BookingStateUI) -> List<WorkspaceObject>,
     getTimes: (String, String) -> List<List<Pair<String, String>>>,
     onDismiss: () -> Unit
 ) {
@@ -74,7 +74,26 @@ fun BookingDialogUI(
                     }
                 }
             } else if (abs(progressBar.value - 2 * PROGRESS_BAR_STEP) < 1e-3) {
-                SecondPAgeContent()
+                SecondPAgeContent(
+                    state = state,
+                    getTemplates = getTemplates,
+                    onNextPage = {
+                        scope.launch {
+                            progressBar.animateTo(
+                                targetValue = 3 * PROGRESS_BAR_STEP,
+                                animationSpec = tween(durationMillis = 600)
+                            )
+                        }
+                    },
+                    onPrevPage = {
+                        scope.launch {
+                            progressBar.animateTo(
+                                targetValue = 1 * PROGRESS_BAR_STEP,
+                                animationSpec = tween(durationMillis = 200)
+                            )
+                        }
+                    }
+                )
             } else if (abs(progressBar.value - 3 * PROGRESS_BAR_STEP) < 1e-3) {
 
             }
@@ -141,16 +160,16 @@ private fun CancelButton(onDismiss: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewDialog() {
-    val wot = WorkspaceObject.Template(0, "", "", false)
+    val wot = WorkspaceObject.Template(0, "", "cat", false)
 
     val templates = remember {
         mutableStateOf(
             listOf(
-                WorkspaceObject(0, 0, 0, 100, 100, wot),
-                WorkspaceObject(1, 100, 0, 100, 100, wot),
-                WorkspaceObject(1, 0, 100, 100, 100, wot),
-                WorkspaceObject(2, 100, 100, 200, 200, wot),
-                WorkspaceObject(1, 310, 200, 110, 100, wot),
+                WorkspaceObject(0, 0, 0, 100, 100, wot.copy(category = "red")),
+                WorkspaceObject(1, 100, 0, 100, 100, wot.copy(category = "blue")),
+                WorkspaceObject(1, 0, 100, 100, 100, wot.copy(category = "blue")),
+                WorkspaceObject(2, 100, 100, 200, 200, wot.copy(category = "green")),
+                WorkspaceObject(1, 310, 200, 110, 100, wot.copy(category = "blue")),
             )
         )
     }
@@ -162,7 +181,7 @@ private fun PreviewDialog() {
     Box(modifier = Modifier.fillMaxSize()) {
         BookingDialogUI(
             onDismiss = {},
-            templates = templates,
+            getTemplates = { templates.value },
             state = state,
             timesRangesToBooking = listOf("45 мин", "1 час", "2 часа"),
             daysToBooking = listOf("25.07.2024", "26.07.2024", "27.07.2024"),
