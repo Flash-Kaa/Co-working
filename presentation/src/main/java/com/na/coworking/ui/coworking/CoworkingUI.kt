@@ -19,7 +19,7 @@ import com.na.coworking.domain.entities.Workspace
 import com.na.coworking.domain.entities.WorkspaceObject
 import com.na.coworking.ui.coworking.elements.Address
 import com.na.coworking.ui.coworking.elements.Amenities
-import com.na.coworking.ui.coworking.elements.CoworkingSchemeWithTitle
+import com.na.coworking.ui.coworking.elements.CoworkingSchemeWithTitleAndButton
 import com.na.coworking.ui.coworking.elements.Description
 import com.na.coworking.ui.coworking.elements.ImagePager
 import com.na.coworking.ui.coworking.elements.OperatingMode
@@ -30,6 +30,10 @@ fun CoworkingUI(
     coworking: MutableState<Workspace>,
     paddingValues: PaddingValues
 ) {
+    val bookingDialogIsOpen = remember {
+        mutableStateOf(false)
+    }
+
     LazyColumn(
         contentPadding = PaddingValues(
             top = paddingValues.calculateTopPadding(),
@@ -41,7 +45,7 @@ fun CoworkingUI(
         item { Amenities(coworking) }
         item { Address(coworking) }
         item { OperatingMode(coworking) }
-        item { CoworkingSchemeWithTitle(coworking) }
+        item { CoworkingSchemeWithTitleAndButton(coworking, bookingDialogIsOpen) }
         item { Spacer(modifier = Modifier.height(50.dp)) }
     }
 }

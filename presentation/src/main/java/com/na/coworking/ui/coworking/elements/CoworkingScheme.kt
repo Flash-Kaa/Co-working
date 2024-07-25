@@ -2,6 +2,8 @@ package com.na.coworking.ui.coworking.elements
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,9 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
@@ -20,19 +23,12 @@ import com.na.coworking.R
 import com.na.coworking.domain.entities.WorkspaceObject
 
 @Composable
-fun CoworkingScheme(templates: List<WorkspaceObject>) {
+fun CoworkingScheme(
+    templates: List<WorkspaceObject>,
+    onClick: (() -> Unit)? = null
+) {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = colorResource(id = R.color.white),
-                shape = RoundedCornerShape(20.dp)
-            )
-            .shadow(
-                elevation = 3.dp,
-                shape = RoundedCornerShape(20.dp)
-            )
-            .padding(30.dp)
             .background(
                 color = colorResource(id = R.color.light_gray),
                 shape = RoundedCornerShape(20.dp)
@@ -52,28 +48,54 @@ fun CoworkingScheme(templates: List<WorkspaceObject>) {
             )
 
     ) {
-        TemplatesDrawer(templates)
+        TemplatesDrawer(templates, onClick)
     }
 }
 
 @Composable
-private fun TemplatesDrawer(templates: List<WorkspaceObject>) {
+private fun TemplatesDrawer(
+    templates: List<WorkspaceObject>,
+    onClick: (() -> Unit)?
+) {
     BoxWithConstraints(
         modifier = Modifier.fillMaxWidth()
     ) {
         val scale = constraints.maxWidth.toFloat() / templates.maxOf { it.x + it.width.toFloat() }
 
-        with(LocalDensity.current) {
-            templates.forEach {
-                // TODO: use image
-                Box(
-                    modifier = Modifier
-                        .padding(start = (it.x * scale).toDp(), top = (it.y * scale).toDp())
-                        .background(color = if (it.id == 0) Color.Red else if (it.id == 1) Color.Blue else Color.Green)
-                        .height((it.height * scale).toDp())
-                        .width((it.width * scale).toDp())
-                )
-            }
+        for (template in templates) {
+            // TODO: use image
+            Box(
+                modifier = Modifier
+                    .scaledImage(template, scale, onClick)
+            )
         }
+    }
+}
+
+
+@Composable
+private fun Modifier.scaledImage(
+    template: WorkspaceObject,
+    scale: Float,
+    onClick: (() -> Unit)? = null
+): Modifier {
+    val clickableOrNot =
+        if (onClick == null) {
+            this
+        } else {
+            this.clickable(
+                onClick = onClick,
+                interactionSource = remember { MutableInteractionSource() },
+                indication = rememberRipple(bounded = true, color = Color.Gray)
+            )
+        }
+
+
+    with(LocalDensity.current) {
+        return clickableOrNot
+            .padding(start = (template.x * scale).toDp(), top = (template.y * scale).toDp())
+            .background(color = if (template.id == 0) Color.Red else if (template.id == 1) Color.Blue else Color.Green)
+            .height((template.height * scale).toDp())
+            .width((template.width * scale).toDp())
     }
 }

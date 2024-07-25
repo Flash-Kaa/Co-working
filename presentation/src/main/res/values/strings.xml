@@ -41,4 +41,12 @@
     <string name="address">"Адрес: "</string>
     <string name="weekend">Выходной</string>
     <string name="coworking_scheme">Схема помещения</string>
+    <string name="booking_place">Забронировать место</string>
+    <string name="booking_place_now">Бронирование места</string>
+    <string name="choose_date">Выберите дату и длительность посещения</string>
+    <string name="choose_place">Выберите место</string>
+    <string name="date">Дата</string>
+    <string name="date_pattern">dd.MM.yyyy</string>
+    <string name="choosed">"Выбрано: "</string>
+    <string name="continue_str">Продолжить</string>
 </resources>
