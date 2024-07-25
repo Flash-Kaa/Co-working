@@ -6,7 +6,8 @@ data class WorkspaceObject(
     val y: Int,
     val height: Int,
     val width: Int,
-    val template: Template
+    val template: Template,
+    val isEnableToChosen: Boolean = true
 ) {
     data class Template(
         val id: Int,

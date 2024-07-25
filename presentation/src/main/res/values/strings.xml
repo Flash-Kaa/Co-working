@@ -50,4 +50,5 @@
     <string name="choosed">"Выбрано: "</string>
     <string name="continue_str">Продолжить</string>
     <string name="back_str">Вернуться</string>
+    <string name="your_chosen_is">Вы выбрали: </string>
 </resources>

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -22,30 +21,33 @@ import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.RedButton
 
 @Composable
-fun SecondPAgeContent(
+fun ThirdPageContent(
     state: MutableState<BookingStateUI>,
     getTemplates: (BookingStateUI) -> List<WorkspaceObject>,
-    onNextPage: () -> Unit,
+    onConfirm: () -> Unit,
     onPrevPage: () -> Unit
 ) {
-    GExaText(text = stringResource(R.string.choose_place), fontSize = 13.sp)
+    GExaText(text = getChosenInfo(state), fontSize = 13.sp)
     Spacer(modifier = Modifier.height(20.dp))
 
-    val templates = remember { getTemplates(state.value) }
-    CoworkingScheme(templates = templates) {
-        state.value = state.value.copy(workspaceObject = it)
+    state.value.workspaceObject?.let { template ->
+        CoworkingScheme(
+            templates = getTemplates(state.value).map {
+                it.copy(isEnableToChosen = it.id == template.id)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
     }
 
-    ChosenInfo(state)
-
-    NavButtons(state, onPrevPage, onNextPage)
+    NavButtons(state, onPrevPage, onConfirm)
 }
 
 @Composable
 private fun NavButtons(
     state: MutableState<BookingStateUI>,
     onPrevPage: () -> Unit,
-    onNextPage: () -> Unit
+    onConfirm: () -> Unit
 ) {
     Row {
         RedButton(
@@ -60,8 +62,8 @@ private fun NavButtons(
         )
         Spacer(modifier = Modifier.weight(1f))
         RedButton(
-            text = stringResource(id = R.string.continue_str),
-            onClick = onNextPage,
+            text = stringResource(id = R.string.booking),
+            onClick = onConfirm,
             isEnabled = state.value.workspaceObject != null,
             fontSize = 13.sp,
             modifier = Modifier.weight(10f)
@@ -70,19 +72,11 @@ private fun NavButtons(
 }
 
 @Composable
-private fun ChosenInfo(state: MutableState<BookingStateUI>) {
-    state.value.workspaceObject?.let {
-        Spacer(modifier = Modifier.height(20.dp))
-        GExaText(text = getChooseText(it), fontSize = 13.sp)
-    }
-    Spacer(modifier = Modifier.height(20.dp))
-}
+private fun getChosenInfo(state: MutableState<BookingStateUI>) = buildAnnotatedString {
+    append(stringResource(R.string.your_chosen_is))
 
-@Composable
-private fun getChooseText(template: WorkspaceObject) = buildAnnotatedString {
     withStyle(SpanStyle(color = colorResource(id = R.color.red))) {
-        append(stringResource(R.string.choosed))
+        append(" ${state.value.date} ${state.value.timeStart} - ${state.value.timeEnd}, ")
+        append("${state.value.workspaceObject?.template?.category}")
     }
-
-    append(template.template.category)
 }

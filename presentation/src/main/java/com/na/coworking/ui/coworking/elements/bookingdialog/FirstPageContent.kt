@@ -51,12 +51,19 @@ fun FirstPageContent(
     val timeMenuIsOpen = remember { mutableStateOf(false) }
     val date = remember { mutableStateOf(daysToBooking.first()) }
     val time = remember { mutableStateOf(timesRangesToBooking.first()) }
-    val times = remember { mutableStateOf(getTimes(date.value, time.value)) }
+
+    DateTimeChooser(
+        state = state,
+        date = date,
+        dateMenuIsOpen = dateMenuIsOpen,
+        time = time,
+        timeMenuIsOpen = timeMenuIsOpen,
+        daysToBooking = daysToBooking,
+        timesRangesToBooking = timesRangesToBooking,
+        getTimes = getTimes
+    )
+
     val canNext = state.value.timeStart.isNotBlank() && state.value.timeEnd.isNotBlank()
-
-    DateTimeChooser(date, dateMenuIsOpen, time, timeMenuIsOpen, daysToBooking, timesRangesToBooking)
-    TimeRangeChooser(times, state)
-
     ChooseInfo(canNext, state)
     NextButton(onNextPage, canNext)
 }
@@ -71,6 +78,7 @@ private fun NextButton(onNextPage: () -> Unit, canNext: Boolean) {
             text = stringResource(R.string.continue_str),
             onClick = onNextPage,
             isEnabled = canNext,
+            fontSize = 13.sp,
             modifier = Modifier.fillMaxWidth(0.45f)
         )
     }
@@ -81,7 +89,7 @@ private fun ChooseInfo(
     canNext: Boolean,
     state: MutableState<BookingStateUI>
 ) {
-    Spacer(modifier = Modifier.height(30.dp))
+    Spacer(modifier = Modifier.height(5.dp))
     if (canNext) {
         GExaText(text = getChooseText(state), fontSize = 13.sp)
         Spacer(modifier = Modifier.height(20.dp))
@@ -101,48 +109,46 @@ private fun getChooseText(state: MutableState<BookingStateUI>) = buildAnnotatedS
 
 @Composable
 private fun TimeRangeChooser(
-    times: MutableState<List<List<Pair<String, String>>>>,
-    state: MutableState<BookingStateUI>
+    state: MutableState<BookingStateUI>,
+    times: List<List<Pair<String, String>>>
 ) {
-    Column {
-        for (list in times.value) {
-            Row(
-                horizontalArrangement = Arrangement.Center
-            ) {
-                for ((timeStart, timeEnd) in list) {
-                    GExaText(
-                        text = "$timeStart - $timeEnd",
-                        fontSize = 12.sp,
-                        color = if (state.value.timeStart == timeStart && state.value.timeEnd == timeEnd) {
-                            colorResource(id = R.color.white)
-                        } else {
-                            colorResource(id = R.color.soft_black)
-                        },
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(2.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .clickable(
-                                onClick = {
-                                    state.value = state.value.copy(
-                                        timeStart = timeStart,
-                                        timeEnd = timeEnd
-                                    )
-                                },
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = rememberRipple(bounded = true, color = Color.Gray)
-                            )
-                            .background(
-                                color = if (state.value.timeStart == timeStart && state.value.timeEnd == timeEnd) {
-                                    colorResource(id = R.color.red)
-                                } else {
-                                    colorResource(id = R.color.light_gray)
-                                }
-                            )
-                            .padding(vertical = 15.dp)
-                    )
-                }
+    for (list in times) {
+        Row(
+            horizontalArrangement = Arrangement.Center
+        ) {
+            for ((timeStart, timeEnd) in list) {
+                GExaText(
+                    text = "$timeStart - $timeEnd",
+                    fontSize = 12.sp,
+                    color = if (state.value.timeStart == timeStart && state.value.timeEnd == timeEnd) {
+                        colorResource(id = R.color.white)
+                    } else {
+                        colorResource(id = R.color.soft_black)
+                    },
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(2.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .clickable(
+                            onClick = {
+                                state.value = state.value.copy(
+                                    timeStart = timeStart,
+                                    timeEnd = timeEnd
+                                )
+                            },
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = rememberRipple(bounded = true, color = Color.Gray)
+                        )
+                        .background(
+                            color = if (state.value.timeStart == timeStart && state.value.timeEnd == timeEnd) {
+                                colorResource(id = R.color.red)
+                            } else {
+                                colorResource(id = R.color.light_gray)
+                            }
+                        )
+                        .padding(vertical = 15.dp)
+                )
             }
         }
     }
@@ -150,31 +156,37 @@ private fun TimeRangeChooser(
 
 @Composable
 private fun DateTimeChooser(
+    state: MutableState<BookingStateUI>,
     date: MutableState<String>,
-    dateDMIsOPen: MutableState<Boolean>,
+    dateMenuIsOpen: MutableState<Boolean>,
     time: MutableState<String>,
-    timeDMIsOpen: MutableState<Boolean>,
+    timeMenuIsOpen: MutableState<Boolean>,
     daysToBooking: List<String>,
-    timesRangesToBooking: List<String>
+    timesRangesToBooking: List<String>,
+    getTimes: (String, String) -> List<List<Pair<String, String>>>,
 ) {
+    val times = getTimes(date.value, time.value)
+
     Box {
         Column {
             GExaText(text = stringResource(R.string.choose_date), fontSize = 13.sp)
             Spacer(modifier = Modifier.height(10.dp))
 
-            ChoseMenu(date.value, R.drawable.baseline_calendar_month_24, dateDMIsOPen)
+            ChoseMenu(date.value, R.drawable.baseline_calendar_month_24, dateMenuIsOpen)
             Spacer(modifier = Modifier.height(10.dp))
 
             ChoseMenu(
                 time.value,
                 R.drawable.baseline_access_time_24,
-                timeDMIsOpen
+                timeMenuIsOpen
             )
+
+            TimeRangeChooser(state, times)
         }
 
         Row {
-            MenuItems(dateDMIsOPen, daysToBooking, date)
-            MenuItems(timeDMIsOpen, timesRangesToBooking, time)
+            MenuItems(dateMenuIsOpen, daysToBooking, date)
+            MenuItems(timeMenuIsOpen, timesRangesToBooking, time)
         }
     }
     Spacer(modifier = Modifier.height(10.dp))
@@ -262,9 +274,14 @@ private fun ChoseMenu(text: String, iconId: Int, chooserIsOpen: MutableState<Boo
         Spacer(modifier = Modifier.width(10.dp))
         GExaText(text = text, fontSize = 13.sp)
 
+        val imageVector = if (chooserIsOpen.value) {
+            ImageVector.vectorResource(id = R.drawable.baseline_keyboard_arrow_up_24)
+        } else {
+            ImageVector.vectorResource(id = R.drawable.baseline_keyboard_arrow_down_24)
+        }
+
         Image(
-            imageVector = if (chooserIsOpen.value) ImageVector.vectorResource(id = R.drawable.baseline_keyboard_arrow_up_24)
-            else ImageVector.vectorResource(id = R.drawable.baseline_keyboard_arrow_down_24),
+            imageVector = imageVector,
             contentDescription = null,
             modifier = Modifier.fillMaxWidth(),
             alignment = Alignment.CenterEnd

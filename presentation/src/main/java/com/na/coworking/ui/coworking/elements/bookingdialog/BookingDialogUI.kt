@@ -48,11 +48,11 @@ fun BookingDialogUI(
     daysToBooking: List<String>,
     getTemplates: (BookingStateUI) -> List<WorkspaceObject>,
     getTimes: (String, String) -> List<List<Pair<String, String>>>,
+    onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss) {
         val progressBar = remember { Animatable(PROGRESS_BAR_STEP) }
-        val scope = rememberCoroutineScope()
 
         Column(
             modifier = Modifier
@@ -64,42 +64,77 @@ fun BookingDialogUI(
                 .padding(16.dp)
         ) {
             DialogTitle(progressBar)
-            if (abs(progressBar.value - PROGRESS_BAR_STEP) < 1e-3) {
-                FirstPageContent(state, timesRangesToBooking, daysToBooking, getTimes) {
-                    scope.launch {
-                        progressBar.animateTo(
-                            targetValue = 2 * PROGRESS_BAR_STEP,
-                            animationSpec = tween(durationMillis = 600)
-                        )
-                    }
-                }
-            } else if (abs(progressBar.value - 2 * PROGRESS_BAR_STEP) < 1e-3) {
-                SecondPAgeContent(
-                    state = state,
-                    getTemplates = getTemplates,
-                    onNextPage = {
-                        scope.launch {
-                            progressBar.animateTo(
-                                targetValue = 3 * PROGRESS_BAR_STEP,
-                                animationSpec = tween(durationMillis = 600)
-                            )
-                        }
-                    },
-                    onPrevPage = {
-                        scope.launch {
-                            progressBar.animateTo(
-                                targetValue = 1 * PROGRESS_BAR_STEP,
-                                animationSpec = tween(durationMillis = 200)
-                            )
-                        }
-                    }
-                )
-            } else if (abs(progressBar.value - 3 * PROGRESS_BAR_STEP) < 1e-3) {
 
-            }
+            Pager(
+                progressBar = progressBar,
+                state = state,
+                timesRangesToBooking = timesRangesToBooking,
+                daysToBooking = daysToBooking,
+                getTimes = getTimes,
+                getTemplates = getTemplates,
+                onConfirm = onConfirm
+            )
         }
 
         CancelButton(onDismiss)
+    }
+}
+
+@Composable
+private fun Pager(
+    progressBar: Animatable<Float, AnimationVector1D>,
+    state: MutableState<BookingStateUI>,
+    timesRangesToBooking: List<String>,
+    daysToBooking: List<String>,
+    getTimes: (String, String) -> List<List<Pair<String, String>>>,
+    getTemplates: (BookingStateUI) -> List<WorkspaceObject>,
+    onConfirm: () -> Unit,
+) {
+    val scope = rememberCoroutineScope()
+    if (abs(progressBar.value - PROGRESS_BAR_STEP) < 1e-3) {
+        FirstPageContent(state, timesRangesToBooking, daysToBooking, getTimes) {
+            scope.launch {
+                progressBar.animateTo(
+                    targetValue = 2 * PROGRESS_BAR_STEP,
+                    animationSpec = tween(durationMillis = 600)
+                )
+            }
+        }
+    } else if (abs(progressBar.value - 2 * PROGRESS_BAR_STEP) < 1e-3) {
+        SecondPAgeContent(
+            state = state,
+            getTemplates = getTemplates,
+            onNextPage = {
+                scope.launch {
+                    progressBar.animateTo(
+                        targetValue = 3 * PROGRESS_BAR_STEP,
+                        animationSpec = tween(durationMillis = 600)
+                    )
+                }
+            },
+            onPrevPage = {
+                scope.launch {
+                    progressBar.animateTo(
+                        targetValue = 1 * PROGRESS_BAR_STEP,
+                        animationSpec = tween(durationMillis = 200)
+                    )
+                }
+            }
+        )
+    } else if (abs(progressBar.value - 3 * PROGRESS_BAR_STEP) < 1e-3) {
+        ThirdPageContent(
+            state = state,
+            getTemplates = getTemplates,
+            onConfirm = onConfirm,
+            onPrevPage = {
+                scope.launch {
+                    progressBar.animateTo(
+                        targetValue = 2 * PROGRESS_BAR_STEP,
+                        animationSpec = tween(durationMillis = 200)
+                    )
+                }
+            }
+        )
     }
 }
 
@@ -184,7 +219,14 @@ private fun PreviewDialog() {
             getTemplates = { templates.value },
             state = state,
             timesRangesToBooking = listOf("45 мин", "1 час", "2 часа"),
-            daysToBooking = listOf("25.07.2024", "26.07.2024", "27.07.2024"),
+            daysToBooking = listOf(
+                "25.07.2024",
+                "26.07.2024",
+                "27.07.2024",
+                "25.07.2024",
+                "26.07.2024",
+                "27.07.2024"
+            ),
             getTimes = { _, _ ->
                 listOf(
                     listOf("12:00" to "13:00", "13:00" to "14:00", "14:00" to "15:00"),
@@ -192,7 +234,8 @@ private fun PreviewDialog() {
                     listOf("18:00" to "19:00", "19:00" to "20:00", "20:00" to "21:00"),
                     listOf("21:00" to "22:00"),
                 )
-            }
+            },
+            onConfirm = {}
         )
     }
 }

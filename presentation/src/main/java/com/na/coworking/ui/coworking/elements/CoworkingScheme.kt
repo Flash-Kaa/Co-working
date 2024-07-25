@@ -6,10 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -97,9 +95,30 @@ private fun Modifier.scaledImage(
                 )
             }
 
-        return clickableOrNot
-            .background(color = if (template.id == 0) Color.Red else if (template.id == 1) Color.Blue else Color.Green)
+        // TODO: delete
+        val color = when (template.id) {
+            0 -> {
+                Color.Red
+            }
+
+            1 -> {
+                Color.Blue
+            }
+
+            else -> {
+                Color.Green
+            }
+        }
+
+        val mod = clickableOrNot
+            .background(color = color)
             .height((template.height * scale).toDp())
             .width((template.width * scale).toDp())
+
+        if (template.isEnableToChosen) {
+            return mod
+        } else {
+            return mod.background(colorResource(id = R.color.light_gray).copy(alpha = 0.9f))
+        }
     }
 }
