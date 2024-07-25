@@ -51,4 +51,6 @@
     <string name="continue_str">Продолжить</string>
     <string name="back_str">Вернуться</string>
     <string name="your_chosen_is">Вы выбрали: </string>
+    <string name="success_booking">Вы успешно забронировали место</string>
+    <string name="error_booking">Произошла ошибка. Возможно это место уже занято</string>
 </resources>

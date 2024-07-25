@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.na.coworking.R
+import com.na.coworking.actions.CoworkingEvent
 import com.na.coworking.domain.entities.WorkspaceObject
 import com.na.coworking.ui.coworking.BookingStateUI
 import com.na.coworking.ui.global.GExaText
@@ -42,14 +43,14 @@ private const val PROGRESS_BAR_PARTS_COUNT = 3
 private const val PROGRESS_BAR_STEP = 1f
 
 @Composable
-fun BookingDialogUI(
+internal fun BookingDialogUI(
     state: MutableState<BookingStateUI>,
     timesRangesToBooking: List<String>,
     daysToBooking: List<String>,
     getTemplates: (BookingStateUI) -> List<WorkspaceObject>,
     getTimes: (String, String) -> List<List<Pair<String, String>>>,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    getEvent: (CoworkingEvent) -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss) {
         val progressBar = remember { Animatable(PROGRESS_BAR_STEP) }
@@ -72,7 +73,8 @@ fun BookingDialogUI(
                 daysToBooking = daysToBooking,
                 getTimes = getTimes,
                 getTemplates = getTemplates,
-                onConfirm = onConfirm
+                onDismiss = onDismiss,
+                getEvent = getEvent
             )
         }
 
@@ -88,7 +90,8 @@ private fun Pager(
     daysToBooking: List<String>,
     getTimes: (String, String) -> List<List<Pair<String, String>>>,
     getTemplates: (BookingStateUI) -> List<WorkspaceObject>,
-    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+    getEvent: (CoworkingEvent) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     if (abs(progressBar.value - PROGRESS_BAR_STEP) < 1e-3) {
@@ -125,7 +128,8 @@ private fun Pager(
         ThirdPageContent(
             state = state,
             getTemplates = getTemplates,
-            onConfirm = onConfirm,
+            getEvent = getEvent,
+            onConfirm = onDismiss,
             onPrevPage = {
                 scope.launch {
                     progressBar.animateTo(
@@ -215,9 +219,8 @@ private fun PreviewDialog() {
 
     Box(modifier = Modifier.fillMaxSize()) {
         BookingDialogUI(
-            onDismiss = {},
-            getTemplates = { templates.value },
             state = state,
+            getTemplates = { templates.value },
             timesRangesToBooking = listOf("45 мин", "1 час", "2 часа"),
             daysToBooking = listOf(
                 "25.07.2024",
@@ -235,7 +238,8 @@ private fun PreviewDialog() {
                     listOf("21:00" to "22:00"),
                 )
             },
-            onConfirm = {}
+            onDismiss = {},
+            getEvent =  {}
         )
     }
 }

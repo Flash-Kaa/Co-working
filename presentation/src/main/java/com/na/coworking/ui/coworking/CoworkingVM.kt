@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.na.coworking.actions.CoworkingAction
 import com.na.coworking.domain.entities.Workspace
 import com.na.coworking.domain.usecases.listofcoworking.GetCoworkingByIdUseCase
 import kotlinx.coroutines.Dispatchers
@@ -31,16 +30,6 @@ internal class CoworkingVM(
                 coworking.value = newCoworking
             }
         }
-    }
-
-    fun getAction(action: CoworkingAction): () -> Unit {
-        return when (action) {
-            is CoworkingAction.OpenBooking -> ::openBooking
-        }
-    }
-
-    private fun openBooking() {
-        // TODO: bookingData.value = getBookingDataUseCase
     }
 
     class FactoryWrapperWithUseCases(
