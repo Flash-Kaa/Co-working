@@ -1,5 +1,6 @@
 package com.na.coworking.ui.account
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -7,11 +8,13 @@ import com.na.coworking.actions.AccountAction
 import com.na.coworking.actions.AccountEvent
 import com.na.coworking.domain.entities.Booking
 import com.na.coworking.domain.entities.LoadState
+import com.na.coworking.domain.usecases.account.GetUserUseCase
 import com.na.coworking.domain.usecases.authorization.LogoutUseCase
 import com.na.coworking.domain.usecases.bookings.BookingCancelUseCase
 import com.na.coworking.domain.usecases.bookings.BookingConfirmUseCase
 import com.na.coworking.domain.usecases.bookings.GetBookingsUseCase
 import com.na.coworking.navigation.Router
+import com.na.coworking.ui.account.UserStateUI.Companion.toStateUI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -21,19 +24,33 @@ import kotlinx.coroutines.withContext
 internal class AccountVM(
     private val router: Router,
 
-    private val bookingConfirm: BookingConfirmUseCase,
-    private val bookingCancel: BookingCancelUseCase,
-    private val bookings: GetBookingsUseCase,
+    private val bookingConfirmUseCase: BookingConfirmUseCase,
+    private val bookingCancelUseCase: BookingCancelUseCase,
+    private val bookingsUseCase: GetBookingsUseCase,
 
-    private val logout: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase,
+
+    private val getUserUseCase: GetUserUseCase
 ) : ViewModel() {
+    val user = mutableStateOf(UserStateUI())
+
     init {
-        viewModelScope.launch {
-            bookings.fetch()
+        viewModelScope.launch(Dispatchers.IO) {
+            launch {
+                bookingsUseCase.invoke()
+            }
+
+            launch {
+                val newUserValue = getUserUseCase()
+
+                withContext(Dispatchers.Main) {
+                    user.value = newUserValue.toStateUI()
+                }
+            }
         }
     }
 
-    fun getBookings(): Flow<List<Booking>> = bookings.invoke()
+    fun getBookings(): Flow<List<Booking>> = bookingsUseCase.items
 
     fun getAction(action: AccountAction): () -> Unit {
         return when (action) {
@@ -51,11 +68,11 @@ internal class AccountVM(
     private fun cancelBooking(event: AccountEvent.OnCancelBooking) {
         viewModelScope.launch {
             launch {
-                bookingCancel(event.bookingId)
+                bookingCancelUseCase(event.bookingId)
             }
 
             launch {
-                val flow = bookingCancel.state
+                val flow = bookingCancelUseCase.state
                 executeEventFromFlow(flow, event)
             }
         }
@@ -64,11 +81,11 @@ internal class AccountVM(
     private fun confirmBooking(event: AccountEvent.OnConfirmBooking) {
         viewModelScope.launch(Dispatchers.IO) {
             launch {
-                bookingConfirm(event.bookingId, event.code)
+                bookingConfirmUseCase(event.bookingId, event.code)
             }
 
             launch {
-                val flow = bookingConfirm.state
+                val flow = bookingConfirmUseCase.state
                 executeEventFromFlow(flow, event)
             }
         }
@@ -77,7 +94,7 @@ internal class AccountVM(
 
     private fun exitAccount() {
         router.navigateToAuthorizationWithSetStartDestination()
-        viewModelScope.launch { logout() }
+        viewModelScope.launch { logoutUseCase() }
     }
 
     private suspend fun executeEventFromFlow(flow: Flow<LoadState>, event: AccountEvent) {
@@ -97,7 +114,8 @@ internal class AccountVM(
         private val bookingConfirm: BookingConfirmUseCase,
         private val bookingCancel: BookingCancelUseCase,
         private val bookings: GetBookingsUseCase,
-        private val logout: LogoutUseCase
+        private val logout: LogoutUseCase,
+        private val getUserUseCase: GetUserUseCase
     ) {
         inner class Factory(
             private val router: Router
@@ -106,10 +124,11 @@ internal class AccountVM(
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return AccountVM(
                     router = router,
-                    bookingConfirm = bookingConfirm,
-                    bookingCancel = bookingCancel,
-                    bookings = bookings,
-                    logout = logout
+                    bookingConfirmUseCase = bookingConfirm,
+                    bookingCancelUseCase = bookingCancel,
+                    bookingsUseCase = bookings,
+                    logoutUseCase = logout,
+                    getUserUseCase = getUserUseCase
                 ) as T
             }
         }

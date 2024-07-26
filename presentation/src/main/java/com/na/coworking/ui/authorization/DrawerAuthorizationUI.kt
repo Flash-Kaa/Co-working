@@ -15,6 +15,7 @@ fun DrawerAuthorizationUI(
 ) {
     val viewModel: AuthorizationVM = viewModel(
         factory = LocalContext.current.appComponent
+            .provideTokenUseCasesComponent()
             .getAuthorizationVMSubcomponent()
             .provideFactoryWrapper()
             .Factory(router)

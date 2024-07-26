@@ -1,32 +1,20 @@
 package com.na.coworking.ui.coworking
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import com.na.coworking.R
 import com.na.coworking.actions.CoworkingEvent
 import com.na.coworking.domain.entities.Amenity
-import com.na.coworking.domain.entities.LoadState
 import com.na.coworking.domain.entities.OperationMode
 import com.na.coworking.domain.entities.Workspace
 import com.na.coworking.domain.entities.WorkspaceObject
@@ -37,7 +25,6 @@ import com.na.coworking.ui.coworking.elements.Description
 import com.na.coworking.ui.coworking.elements.ImagePager
 import com.na.coworking.ui.coworking.elements.OperatingMode
 import com.na.coworking.ui.coworking.elements.bookingdialog.BookingDialogUI
-import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.TopAppBar
 
 @Composable
@@ -81,7 +68,6 @@ internal fun CoworkingUI(
         )
     }
 }
-
 
 
 @Preview(showBackground = true)

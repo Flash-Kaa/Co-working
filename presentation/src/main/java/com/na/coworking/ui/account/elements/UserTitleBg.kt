@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
@@ -30,13 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.na.coworking.R
 import com.na.coworking.actions.AccountAction
-import com.na.coworking.domain.entities.User
+import com.na.coworking.ui.account.UserStateUI
 import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.GTeraText
 
 @Composable
 internal fun UserTitleBg(
-    user: User,
+    user: MutableState<UserStateUI>,
     getAction: (AccountAction) -> (() -> Unit)
 ) {
     Box(
@@ -80,20 +81,20 @@ private fun ExitButton(onClick: () -> Unit) {
 }
 
 @Composable
-private fun UserName(user: User) {
+private fun UserName(user: MutableState<UserStateUI>) {
     Box(
         modifier = Modifier.heightIn(min = 30.dp),
         contentAlignment = Alignment.Center
     ) {
         GExaText(
-            text = ("${user.firstName} ${user.secondName}").ifBlank { user.email },
+            text = ("${user.value.firstName} ${user.value.secondName}").ifBlank { user.value.email },
             fontSize = 13.sp
         )
     }
 }
 
 @Composable
-private fun CircleIcon(user: User) {
+private fun CircleIcon(user: MutableState<UserStateUI>) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -104,7 +105,7 @@ private fun CircleIcon(user: User) {
             .sizeIn(minWidth = 30.dp, minHeight = 30.dp)
     ) {
         GExaText(
-            text = user.email.getOrElse(0) { 'П' }.uppercase(),
+            text = user.value.email.getOrElse(0) { 'П' }.uppercase(),
             color = colorResource(id = R.color.white),
             fontSize = 13.sp,
         )

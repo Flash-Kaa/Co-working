@@ -9,9 +9,5 @@ import javax.inject.Singleton
 internal interface AppComponent {
     fun getMainPageVMSubcomponent(): MainViewModelSubcomponent
 
-    fun getAccountVMSubcomponent(): AccountViewModelSubcomponent
-
-    fun getAuthorizationVMSubcomponent(): AuthorizationViewModelSubcomponent
-
-    fun getTokenUseCasesSubcomponent(): AuthorizationTokenUseCasesSubcomponent
+    fun provideTokenUseCasesComponent(): AuthorizationTokenUseCasesSubcomponent
 }

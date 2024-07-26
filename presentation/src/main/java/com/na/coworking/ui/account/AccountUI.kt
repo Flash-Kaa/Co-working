@@ -15,7 +15,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.na.coworking.actions.AccountAction
 import com.na.coworking.actions.AccountEvent
 import com.na.coworking.domain.entities.Booking
-import com.na.coworking.domain.entities.User
 import com.na.coworking.ui.account.elements.Page
 import com.na.coworking.ui.account.elements.PagerTitle
 import com.na.coworking.ui.account.elements.UserTitleBg
@@ -25,7 +24,7 @@ import kotlinx.coroutines.flow.flow
 
 @Composable
 internal fun AccountUI(
-    user: User,
+    user: MutableState<UserStateUI>,
     page: MutableState<Page>,
     paddingValues: PaddingValues,
     bookings: State<List<Booking>>,
@@ -43,14 +42,18 @@ internal fun AccountUI(
 
 @Preview(showBackground = true)
 @Composable
-private fun Preview() {
-    val user = User(
-        id = 0,
-        email = "flashkaa@forever.com",
-        firstName = "egor",
-        secondName = "unknown",
-        accessLevel = 0
-    )
+private fun PreviewAccountUI() {
+    val user = remember {
+        mutableStateOf(
+            UserStateUI(
+                id = 0,
+                email = "flashkaa@forever.com",
+                firstName = "egor",
+                secondName = "unknown",
+                accessLevel = 0
+            )
+        )
+    }
 
     val page = remember {
         mutableStateOf(Page.Booking)

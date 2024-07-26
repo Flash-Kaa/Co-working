@@ -2,6 +2,7 @@ package com.na.coworking.ui.account
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -11,7 +12,6 @@ import com.na.coworking.actions.AccountAction
 import com.na.coworking.actions.AccountEvent
 import com.na.coworking.appComponent
 import com.na.coworking.domain.entities.Booking
-import com.na.coworking.domain.entities.User
 import com.na.coworking.navigation.Router
 import com.na.coworking.ui.account.elements.Page
 import kotlinx.coroutines.flow.Flow
@@ -22,19 +22,18 @@ fun DrawerAccountUI(
     router: Router,
     padding: PaddingValues
 ) {
-    val user = // TODO:, getUser() or authorizationUI() if empty
-        User(1, "eeg", "trt", "re@we.ru", 0)
-
     val viewModel: AccountVM = viewModel(
         factory = LocalContext.current
             .appComponent
-            .getAccountVMSubcomponent()
+            .provideTokenUseCasesComponent()
+            .provideUserUseCasesComponent()
+            .provideAccountViewModelComponent()
             .provideFactoryWrapper()
             .Factory(router)
     )
 
     DrawerAccountUI(
-        user,
+        viewModel.user,
         pageToOpen,
         padding,
         viewModel.getBookings(),
@@ -45,7 +44,7 @@ fun DrawerAccountUI(
 
 @Composable
 private fun DrawerAccountUI(
-    user: User,
+    user: MutableState<UserStateUI>,
     pageToOpen: Page,
     paddingValues: PaddingValues,
     bookings: Flow<List<Booking>>,

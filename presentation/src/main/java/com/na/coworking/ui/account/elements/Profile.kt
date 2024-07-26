@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -14,11 +15,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.na.coworking.R
-import com.na.coworking.domain.entities.User
+import com.na.coworking.ui.account.UserStateUI
 import com.na.coworking.ui.global.GExaText
 
 @Composable
-fun Profile(user: User) {
+fun Profile(user: MutableState<UserStateUI>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -27,13 +28,13 @@ fun Profile(user: User) {
             .padding(30.dp)
     ) {
         TextWithTitle(
-            text = "${user.firstName} ${user.secondName}",
+            text = "${user.value.firstName} ${user.value.secondName}",
             title = stringResource(id = R.string.user)
         )
 
         Spacer(modifier = Modifier.height(35.dp))
 
-        TextWithTitle(text = user.email, title = stringResource(id = R.string.email))
+        TextWithTitle(text = user.value.email, title = stringResource(id = R.string.email))
     }
 }
 

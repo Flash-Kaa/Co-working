@@ -1,8 +1,8 @@
 package com.na.coworking.di.modules.account
 
-import android.content.Context
-import com.na.coworking.appComponent
-import com.na.coworking.data.di.BookingsRepositoryScope
+import com.na.coworking.data.di.BookingsScope
+import com.na.coworking.domain.usecases.account.GetUserUseCase
+import com.na.coworking.domain.usecases.authorization.LogoutUseCase
 import com.na.coworking.domain.usecases.bookings.BookingCancelUseCase
 import com.na.coworking.domain.usecases.bookings.BookingConfirmUseCase
 import com.na.coworking.domain.usecases.bookings.GetBookingsUseCase
@@ -13,16 +13,18 @@ import dagger.Provides
 @Module(includes = [BookingsUseCasesModule::class])
 internal class AccountViewModelFactoryModule {
     @Provides
-    @BookingsRepositoryScope
+    @BookingsScope
     fun provideViewModel(
         getBookingsUseCase: GetBookingsUseCase,
         cancelUseCase: BookingCancelUseCase,
         confirmUseCase: BookingConfirmUseCase,
-        context: Context
+        logoutUseCase: LogoutUseCase,
+        getUserUseCase: GetUserUseCase
     ): AccountVM.FactoryWrapperWithUseCases = AccountVM.FactoryWrapperWithUseCases(
         bookings = getBookingsUseCase,
         bookingConfirm = confirmUseCase,
         bookingCancel = cancelUseCase,
-        logout = context.appComponent.getTokenUseCasesSubcomponent().provideLogoutUseCase()
+        logout = logoutUseCase,
+        getUserUseCase = getUserUseCase
     )
 }

@@ -4,13 +4,16 @@ import javax.inject.Scope
 
 
 @Scope
-annotation class ListOfCoworkingRepositoryScope
+annotation class ListOfCoworkingScope
 
 @Scope
-annotation class BookingsRepositoryScope
+annotation class BookingsScope
 
 @Scope
-annotation class TokenRepositoryScope
+annotation class TokenScope
 
 @Scope
-annotation class AuthRepositoryScope
+annotation class AuthorizationScope
+
+@Scope
+annotation class UserScope

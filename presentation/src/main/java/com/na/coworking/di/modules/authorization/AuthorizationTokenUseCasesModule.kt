@@ -1,6 +1,6 @@
 package com.na.coworking.di.modules.authorization
 
-import com.na.coworking.data.di.TokenRepositoryScope
+import com.na.coworking.data.di.TokenScope
 import com.na.coworking.data.di.authorization.TokenRepositoryModule
 import com.na.coworking.domain.interfaces.authorization.TokenRepository
 import com.na.coworking.domain.usecases.authorization.GetTokenUseCase
@@ -13,18 +13,18 @@ import dagger.Provides
 @Module(includes = [TokenRepositoryModule::class])
 internal class AuthorizationTokenUseCasesModule {
     @Provides
-    @TokenRepositoryScope
+    @TokenScope
     fun provideFetTokenUseCase(repository: TokenRepository) = GetTokenUseCase(repository)
 
     @Provides
-    @TokenRepositoryScope
+    @TokenScope
     fun provideUpdateTokenUseCase(repository: TokenRepository) = UpdateTokenUseCase(repository)
 
     @Provides
-    @TokenRepositoryScope
+    @TokenScope
     fun provideDeleteTokenUseCase(repository: TokenRepository) = LogoutUseCase(repository)
 
     @Provides
-    @TokenRepositoryScope
+    @TokenScope
     fun provideHasLoginUseCase(repository: TokenRepository) = HasLoginUseCase(repository)
 }

@@ -5,11 +5,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import com.na.coworking.actions.AccountEvent
 import com.na.coworking.domain.entities.Booking
-import com.na.coworking.domain.entities.User
+import com.na.coworking.ui.account.UserStateUI
 
 
 internal fun LazyListScope.pager(
-    user: User,
+    user: MutableState<UserStateUI>,
     page: MutableState<Page>,
     bookings: State<List<Booking>>,
 

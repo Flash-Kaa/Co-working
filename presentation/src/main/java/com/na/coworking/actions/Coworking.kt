@@ -12,5 +12,5 @@ internal sealed class CoworkingEvent(
         override val onError: () -> Unit = { },
         override val onSuccess: () -> Unit = { },
         override val onProgress: () -> Unit = { }
-    ): CoworkingEvent(onError, onSuccess, onProgress)
+    ) : CoworkingEvent(onError, onSuccess, onProgress)
 }

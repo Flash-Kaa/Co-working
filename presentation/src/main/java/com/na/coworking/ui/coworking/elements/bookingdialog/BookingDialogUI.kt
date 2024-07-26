@@ -239,7 +239,7 @@ private fun PreviewDialog() {
                 )
             },
             onDismiss = {},
-            getEvent =  {}
+            getEvent = {}
         )
     }
 }
