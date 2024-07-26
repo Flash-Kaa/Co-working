@@ -12,7 +12,7 @@ import com.na.coworking.domain.usecases.account.GetUserUseCase
 import com.na.coworking.domain.usecases.authorization.LogoutUseCase
 import com.na.coworking.domain.usecases.bookings.BookingCancelUseCase
 import com.na.coworking.domain.usecases.bookings.BookingConfirmUseCase
-import com.na.coworking.domain.usecases.bookings.GetBookingsUseCase
+import com.na.coworking.domain.usecases.bookings.GetUserBookingsUseCase
 import com.na.coworking.navigation.Router
 import com.na.coworking.ui.account.UserStateUI.Companion.toStateUI
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +26,7 @@ internal class AccountVM(
 
     private val bookingConfirmUseCase: BookingConfirmUseCase,
     private val bookingCancelUseCase: BookingCancelUseCase,
-    private val bookingsUseCase: GetBookingsUseCase,
+    private val bookingsUseCase: GetUserBookingsUseCase,
 
     private val logoutUseCase: LogoutUseCase,
 
@@ -113,7 +113,7 @@ internal class AccountVM(
     class FactoryWrapperWithUseCases(
         private val bookingConfirm: BookingConfirmUseCase,
         private val bookingCancel: BookingCancelUseCase,
-        private val bookings: GetBookingsUseCase,
+        private val bookings: GetUserBookingsUseCase,
         private val logout: LogoutUseCase,
         private val getUserUseCase: GetUserUseCase
     ) {

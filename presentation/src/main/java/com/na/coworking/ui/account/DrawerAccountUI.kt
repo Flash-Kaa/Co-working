@@ -27,6 +27,7 @@ fun DrawerAccountUI(
             .appComponent
             .provideTokenUseCasesComponent()
             .provideUserUseCasesComponent()
+            .provideBookingsUseCase()
             .provideAccountViewModelComponent()
             .provideFactoryWrapper()
             .Factory(router)

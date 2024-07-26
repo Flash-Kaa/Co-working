@@ -1,11 +1,13 @@
-package com.na.coworking.di.modules.account
+package com.na.coworking.di.modules.bookings
 
 import com.na.coworking.data.di.BookingsScope
 import com.na.coworking.data.di.bookings.BookingsRepositoryModule
 import com.na.coworking.domain.interfaces.bookings.BookingsRepository
+import com.na.coworking.domain.usecases.bookings.AddBookingUseCase
 import com.na.coworking.domain.usecases.bookings.BookingCancelUseCase
 import com.na.coworking.domain.usecases.bookings.BookingConfirmUseCase
-import com.na.coworking.domain.usecases.bookings.GetBookingsUseCase
+import com.na.coworking.domain.usecases.bookings.GetCoworkingBookingsUseCase
+import com.na.coworking.domain.usecases.bookings.GetUserBookingsUseCase
 import dagger.Module
 import dagger.Provides
 
@@ -13,9 +15,15 @@ import dagger.Provides
 internal class BookingsUseCasesModule {
     @Provides
     @BookingsScope
+    fun provideGetCoworkingBookingsUseCase(
+        repository: BookingsRepository
+    ) = GetCoworkingBookingsUseCase(repository)
+
+    @Provides
+    @BookingsScope
     fun provideGetBookingsUseCase(
         repository: BookingsRepository
-    ): GetBookingsUseCase = GetBookingsUseCase(repository)
+    ): GetUserBookingsUseCase = GetUserBookingsUseCase(repository)
 
     @Provides
     @BookingsScope
@@ -28,4 +36,10 @@ internal class BookingsUseCasesModule {
     fun provideConfirmUseCase(
         repository: BookingsRepository
     ): BookingConfirmUseCase = BookingConfirmUseCase(repository)
+
+    @Provides
+    @BookingsScope
+    fun provideAddBookingUseCase(
+        repository: BookingsRepository
+    ): AddBookingUseCase = AddBookingUseCase(repository)
 }

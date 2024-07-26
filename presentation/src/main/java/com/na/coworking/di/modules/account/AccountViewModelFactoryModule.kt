@@ -1,27 +1,25 @@
 package com.na.coworking.di.modules.account
 
-import com.na.coworking.data.di.BookingsScope
 import com.na.coworking.domain.usecases.account.GetUserUseCase
 import com.na.coworking.domain.usecases.authorization.LogoutUseCase
 import com.na.coworking.domain.usecases.bookings.BookingCancelUseCase
 import com.na.coworking.domain.usecases.bookings.BookingConfirmUseCase
-import com.na.coworking.domain.usecases.bookings.GetBookingsUseCase
+import com.na.coworking.domain.usecases.bookings.GetUserBookingsUseCase
 import com.na.coworking.ui.account.AccountVM
 import dagger.Module
 import dagger.Provides
 
-@Module(includes = [BookingsUseCasesModule::class])
+@Module
 internal class AccountViewModelFactoryModule {
     @Provides
-    @BookingsScope
     fun provideViewModel(
-        getBookingsUseCase: GetBookingsUseCase,
+        getUserBookingsUseCase: GetUserBookingsUseCase,
         cancelUseCase: BookingCancelUseCase,
         confirmUseCase: BookingConfirmUseCase,
         logoutUseCase: LogoutUseCase,
         getUserUseCase: GetUserUseCase
     ): AccountVM.FactoryWrapperWithUseCases = AccountVM.FactoryWrapperWithUseCases(
-        bookings = getBookingsUseCase,
+        bookings = getUserBookingsUseCase,
         bookingConfirm = confirmUseCase,
         bookingCancel = cancelUseCase,
         logout = logoutUseCase,

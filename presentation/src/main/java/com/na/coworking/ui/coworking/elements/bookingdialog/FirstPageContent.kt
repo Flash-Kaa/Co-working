@@ -49,8 +49,9 @@ fun FirstPageContent(
 ) {
     val dateMenuIsOpen = remember { mutableStateOf(false) }
     val timeMenuIsOpen = remember { mutableStateOf(false) }
-    val date = remember { mutableStateOf(daysToBooking.first()) }
     val time = remember { mutableStateOf(timesRangesToBooking.first()) }
+    val date = remember { mutableStateOf(daysToBooking.first()) }
+    state.value = state.value.copy(date = date.value)
 
     DateTimeChooser(
         state = state,

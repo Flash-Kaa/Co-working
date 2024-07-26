@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.na.coworking.ui.account.DrawerAccountUI
 import com.na.coworking.ui.account.elements.Page
 import com.na.coworking.ui.authorization.DrawerAuthorizationUI
+import com.na.coworking.ui.coworking.DrawerCoworkingUI
 import com.na.coworking.ui.mainpage.DrawerMainUI
 
 private val coworkingIdArguments = listOf(
@@ -41,6 +42,9 @@ fun NavGraph(
 
         composable(
             "${NavScreen.Workspace.route}/{workspaceId}", coworkingIdArguments
-        ) { }
+        ) {
+            val id = it.arguments?.getInt("workspaceId") ?: 0
+            DrawerCoworkingUI(id = id, paddingValues = padding)
+        }
     }
 }

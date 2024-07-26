@@ -8,7 +8,7 @@ import dagger.Subcomponent
 @UserScope
 @Subcomponent(modules = [UserUseCaseModule::class])
 internal interface UserUseCaseSubcomponent {
-    fun provideAccountViewModelComponent(): AccountViewModelSubcomponent
+    fun provideBookingsUseCase(): BookingsUseCaseSubcomponent
 
     fun provideGetUserUseCase(): GetUserUseCase
 }

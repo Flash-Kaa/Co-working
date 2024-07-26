@@ -64,7 +64,7 @@ internal class AuthorizationVM(
     private fun toRegister() {}
 
     private fun login(event: AuthorizationEvent.Authorization) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             launch {
                 loginUseCase(state.value.toAuthData())
             }

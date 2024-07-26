@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class GetBookingsUseCase(
+class GetUserBookingsUseCase(
     private val repository: BookingsRepository
 ) {
     private val _items = MutableStateFlow<List<Booking>>(emptyList())
@@ -15,7 +15,7 @@ class GetBookingsUseCase(
 
     suspend operator fun invoke() {
         runWithSupervisorInBackground {
-            repository.getList().collect { list ->
+            repository.getUserBookings().collect { list ->
                 _items.update { list }
             }
         }
