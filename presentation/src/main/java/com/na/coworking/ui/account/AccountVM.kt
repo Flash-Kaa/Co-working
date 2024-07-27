@@ -1,13 +1,18 @@
 package com.na.coworking.ui.account
 
+import android.Manifest
+import android.content.pm.PackageManager
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.LocationServices
 import com.na.coworking.actions.AccountAction
 import com.na.coworking.actions.AccountEvent
 import com.na.coworking.domain.entities.Booking
 import com.na.coworking.domain.entities.LoadState
+import com.na.coworking.domain.entities.Location
 import com.na.coworking.domain.usecases.account.GetUserUseCase
 import com.na.coworking.domain.usecases.authorization.LogoutUseCase
 import com.na.coworking.domain.usecases.bookings.BookingCancelUseCase
@@ -80,8 +85,8 @@ internal class AccountVM(
 
     private fun confirmBooking(event: AccountEvent.OnConfirmBooking) {
         viewModelScope.launch(Dispatchers.IO) {
-            launch {
-                bookingConfirmUseCase(event.bookingId, event.code)
+            launch(Dispatchers.Main) {
+                gettingPermission(event)
             }
 
             launch {
@@ -89,7 +94,48 @@ internal class AccountVM(
                 executeEventFromFlow(flow, event)
             }
         }
+    }
 
+    private fun gettingPermission(event: AccountEvent.OnConfirmBooking) {
+        when (PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(
+                event.context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) -> {
+                sendLocation(event)
+            }
+
+            else -> event.requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
+    private fun sendLocation(event: AccountEvent.OnConfirmBooking) {
+        val fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(event.context)
+
+        try {
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+                useLocation(location, event)
+            }
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun useLocation(
+        location: android.location.Location?,
+        event: AccountEvent.OnConfirmBooking
+    ) {
+        location?.let {
+            viewModelScope.launch {
+                bookingConfirmUseCase(
+                    event.bookingId, Location(
+                        latitude = location.latitude.toFloat(),
+                        longitude = location.longitude.toFloat()
+                    )
+                )
+            }
+        }
     }
 
     private fun exitAccount() {

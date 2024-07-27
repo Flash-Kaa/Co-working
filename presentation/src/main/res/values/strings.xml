@@ -14,7 +14,7 @@
     <string name="confirm">Подтвердить</string>
     <string name="cancel_booking_cd">отмена брони</string>
     <string name="confirmed">Подтверждено</string>
-    <string name="input_code_description">Введите 6-ти значный код, выданный администратором</string>
+    <string name="check_location_description">Для подтверждения необходимо выдать приложению разрешение на получение вашего местоположения и находиться в зоне коворкинга</string>
     <string name="confirm_code">Код подтверждения</string>
     <string name="confirm_booking">Подтвердить бронирование</string>
     <string name="cancel_confirm">отменить подтверждение</string>
@@ -53,4 +53,7 @@
     <string name="your_chosen_is">Вы выбрали: </string>
     <string name="success_booking">Вы успешно забронировали место</string>
     <string name="error_booking">Произошла ошибка. Возможно это место уже занято</string>
+    <string name="check_location">Проверить местоположение</string>
+    <string name="booking_confirmed_success">Бронирование успешно подтверждено!</string>
+    <string name="booking_confirmed_error">Не смогли подтвердить бронирование</string>
 </resources>

@@ -2,6 +2,7 @@ package com.na.coworking.domain.interfaces.bookings
 
 import com.na.coworking.domain.entities.Booking
 import com.na.coworking.domain.entities.CoworkingBooking
+import com.na.coworking.domain.entities.Location
 import kotlinx.coroutines.flow.Flow
 
 interface BookingsRepository {
@@ -11,7 +12,7 @@ interface BookingsRepository {
 
     suspend fun cancelBooking(id: Int)
 
-    suspend fun confirmBooking(bookingId: Int, code: Int)
+    suspend fun confirmBooking(bookingId: Int, location: Location)
 
     suspend fun addBooking(bookingData: CoworkingBooking)
 }

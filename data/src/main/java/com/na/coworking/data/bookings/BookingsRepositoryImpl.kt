@@ -2,6 +2,7 @@ package com.na.coworking.data.bookings
 
 import com.na.coworking.domain.entities.Booking
 import com.na.coworking.domain.entities.CoworkingBooking
+import com.na.coworking.domain.entities.Location
 import com.na.coworking.domain.interfaces.bookings.BookingsDataSource
 import com.na.coworking.domain.interfaces.bookings.BookingsRepository
 import kotlinx.coroutines.flow.Flow
@@ -21,8 +22,8 @@ class BookingsRepositoryImpl(
         dataSource.cancelBooking(id)
     }
 
-    override suspend fun confirmBooking(bookingId: Int, code: Int) {
-        dataSource.confirmBooking(bookingId, code)
+    override suspend fun confirmBooking(bookingId: Int, location: Location) {
+        dataSource.confirmBooking(bookingId, location)
     }
 
     override suspend fun addBooking(bookingData: CoworkingBooking) {

@@ -11,6 +11,7 @@ activityCompose = "1.9.0"
 composeBom = "2024.04.01"
 appcompat = "1.7.0"
 material = "1.12.0"
+playServicesLocation = "21.3.0"
 retrofit = "2.9.0"
 daggerAndroid = "2.51.1"
 jacksonDatabindVersion = "2.0.1"
@@ -37,6 +38,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 core-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonDatabindVersion" }
 dagger-android-support = { module = "com.google.dagger:dagger-android-support", version.ref = "daggerAndroid" }

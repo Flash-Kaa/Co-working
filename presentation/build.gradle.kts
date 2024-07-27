@@ -54,7 +54,8 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
 
-
+    // Geolocation
+    implementation(libs.play.services.location)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)

@@ -2,6 +2,7 @@ package com.na.coworking.data.bookings
 
 import com.na.coworking.domain.entities.Booking
 import com.na.coworking.domain.entities.CoworkingBooking
+import com.na.coworking.domain.entities.Location
 import com.na.coworking.domain.interfaces.bookings.BookingsDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -85,7 +86,7 @@ internal class BookingsDSImpl(
         _userItems.update { userBookings }
     }
 
-    override suspend fun confirmBooking(bookingId: Int, code: Int) {
+    override suspend fun confirmBooking(bookingId: Int, location: Location) {
         userBookings = userBookings.map {
             if (it.id == bookingId) it.copy(isConfirmed = true) else it
         }
