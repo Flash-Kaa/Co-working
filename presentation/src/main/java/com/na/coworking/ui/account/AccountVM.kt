@@ -41,13 +41,12 @@ internal class AccountVM(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
+            val newUserValue = getUserUseCase()
             launch {
-                bookingsUseCase.invoke()
+                bookingsUseCase.invoke(newUserValue.id)
             }
 
             launch {
-                val newUserValue = getUserUseCase()
-
                 withContext(Dispatchers.Main) {
                     user.value = newUserValue.toStateUI()
                 }

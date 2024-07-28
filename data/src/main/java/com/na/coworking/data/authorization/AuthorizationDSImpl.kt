@@ -13,14 +13,13 @@ internal class AuthorizationDSImpl(
      * Need coroutine exception handler
      */
     override suspend fun authorize(data: AuthorizationData): Token {
-        val response = service.authorize(
+        val accessToken = service.authorize(
             LoginDataForPost(
                 login = data.login,
                 password = data.password
             )
-        ).execute()
+        )
 
-        // or throw exception that will be intercepted by the coroutine exception handler
-        return Token(Token.State.HasLogin(response.body()!!.accessToken))
+        return Token(Token.State.HasLogin(accessToken.accessToken))
     }
 }

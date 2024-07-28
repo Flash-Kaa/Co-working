@@ -8,7 +8,5 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [AppModule::class, MapperModule::class])
 internal interface AppComponent {
-    fun getMainPageVMSubcomponent(): MainViewModelSubcomponent
-
     fun provideTokenUseCasesComponent(): AuthorizationTokenUseCasesSubcomponent
 }

@@ -4,7 +4,6 @@ package com.na.coworking.data.network.entities
 import com.google.gson.annotations.SerializedName
 import com.na.coworking.domain.entities.Booking
 import com.na.coworking.domain.entities.CoworkingBooking
-import com.na.coworking.domain.entities.Workspace
 import kotlin.random.Random
 
 class ReservationsNetEntity : ArrayList<ReservationsNetEntity.ReservationsNetEntityItem>() {

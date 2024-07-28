@@ -4,7 +4,8 @@ package com.na.coworking.data.network.entities
 import com.google.gson.annotations.SerializedName
 import com.na.coworking.domain.entities.Amenity
 
-class TemplatesAmenitiesNetEntity : ArrayList<TemplatesAmenitiesNetEntity.TemplatesAmenitiesNetEntityItem>(){
+class TemplatesAmenitiesNetEntity :
+    ArrayList<TemplatesAmenitiesNetEntity.TemplatesAmenitiesNetEntityItem>() {
     data class TemplatesAmenitiesNetEntityItem(
         @SerializedName("category")
         val category: String,
@@ -22,7 +23,7 @@ class TemplatesAmenitiesNetEntity : ArrayList<TemplatesAmenitiesNetEntity.Templa
 
         fun toAmenityTemplate() = Amenity.Template(
             id = id,
-            name=  name,
+            name = name,
             category = category,
             image = image.url
         )

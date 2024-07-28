@@ -1,7 +1,7 @@
 package com.na.coworking.data.di
 
-import com.na.coworking.data.network.ApiService
 import com.na.coworking.data.BuildConfig
+import com.na.coworking.data.network.ApiService
 import com.na.coworking.domain.interfaces.authorization.TokenRepository
 import dagger.Module
 import dagger.Provides
@@ -30,10 +30,15 @@ class ServiceModule {
                 .header("Content-Type", "application/json-patch+json")
                 .header("accept", "text/plain")
 
+
+            // TODO : check for needing
             return@addInterceptor if (token.value.login == null) {
                 it.proceed(requestWithHeaders.build())
             } else {
-                it.proceed(requestWithHeaders.header("Authorization", "Bearer ${token.value.login}").build())
+                it.proceed(
+                    requestWithHeaders.header("Authorization", "Bearer ${token.value.login}")
+                        .build()
+                )
             }
 
 

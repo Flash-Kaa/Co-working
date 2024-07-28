@@ -4,7 +4,8 @@ package com.na.coworking.data.network.entities
 import com.google.gson.annotations.SerializedName
 import com.na.coworking.domain.entities.WorkspaceObject
 
-class TemplatesObjectsNetEntity : ArrayList<TemplatesObjectsNetEntity.TemplatesObjectsNetEntityItem>(){
+class TemplatesObjectsNetEntity :
+    ArrayList<TemplatesObjectsNetEntity.TemplatesObjectsNetEntityItem>() {
     data class TemplatesObjectsNetEntityItem(
         @SerializedName("category")
         val category: String,
