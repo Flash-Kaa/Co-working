@@ -13,9 +13,9 @@ class GetUserBookingsUseCase(
     private val _items = MutableStateFlow<List<Booking>>(emptyList())
     val items = _items.asStateFlow()
 
-    suspend operator fun invoke() {
+    suspend operator fun invoke(userId: Int) {
         runWithSupervisorInBackground {
-            repository.getUserBookings().collect { list ->
+            repository.getUserBookings(userId).collect { list ->
                 _items.update { list }
             }
         }

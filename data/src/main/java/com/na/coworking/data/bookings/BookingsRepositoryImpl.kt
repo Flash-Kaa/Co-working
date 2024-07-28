@@ -14,8 +14,8 @@ class BookingsRepositoryImpl(
         return dataSource.getCoworkingBookings(coworkingId)
     }
 
-    override suspend fun getUserBookings(): Flow<List<Booking>> {
-        return dataSource.getUserBookings()
+    override suspend fun getUserBookings(userId: Int): Flow<List<Booking>> {
+        return dataSource.getUserBookings(userId)
     }
 
     override suspend fun cancelBooking(id: Int) {

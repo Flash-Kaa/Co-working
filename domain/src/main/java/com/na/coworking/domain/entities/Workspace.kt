@@ -6,7 +6,7 @@ data class Workspace(
     val description: String,
     val address: String,
     val institute: String,
-    val rating: Float? = null,
+    val rating: Double,
     val privacy: Int = 0,
     val images: List<Image> = emptyList(),
     val objects: List<WorkspaceObject> = emptyList(),
@@ -15,6 +15,8 @@ data class Workspace(
 ) {
     data class Image(
         val id: Int,
+        val idOwner: Int,
+        val typeOwner: Int,
         val url: String
     )
 }

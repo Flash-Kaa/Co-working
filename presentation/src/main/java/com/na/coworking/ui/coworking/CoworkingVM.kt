@@ -10,6 +10,7 @@ import com.na.coworking.domain.entities.CoworkingBooking
 import com.na.coworking.domain.entities.LoadState
 import com.na.coworking.domain.entities.Workspace
 import com.na.coworking.domain.entities.WorkspaceObject
+import com.na.coworking.domain.usecases.account.GetUserUseCase
 import com.na.coworking.domain.usecases.bookings.AddBookingUseCase
 import com.na.coworking.domain.usecases.bookings.GetCoworkingBookingsUseCase
 import com.na.coworking.domain.usecases.bookings.GetFreeTimesUseCase
@@ -30,10 +31,11 @@ internal class CoworkingVM(
     private val getCoworkingByIdUseCase: GetCoworkingByIdUseCase,
     private val addBookingUseCase: AddBookingUseCase,
     private val getFreeTimesUseCase: GetFreeTimesUseCase,
-    private val getTemplatesUseCase: GetTemplatesUseCase
+    private val getTemplatesUseCase: GetTemplatesUseCase,
+    private val getUserUseCase: GetUserUseCase
 ) : ViewModel() {
     val coworking: MutableState<Workspace> = mutableStateOf(
-        Workspace(-1, "", "", "", "")
+        Workspace(-1, "", "", "", "", .0)
     )
 
     private val bookings = getCoworkingBookingsUseCase.items
@@ -95,13 +97,15 @@ internal class CoworkingVM(
         event: CoworkingEvent.Booking
     ) = viewModelScope.launch(Dispatchers.IO) {
         launch {
+
             val bookingData = CoworkingBooking(
                 idObject = it.id,
                 idWorkspace = coworking.id,
                 timeStart = event.bookingData.timeStart,
                 timeEnd = event.bookingData.timeEnd,
                 date = event.bookingData.date,
-                isConfirmed = false
+                isConfirmed = false,
+                idUser = getUserUseCase().id
             )
 
             addBookingUseCase(bookingData)
@@ -130,7 +134,8 @@ internal class CoworkingVM(
         private val getCoworkingBookingsUseCase: GetCoworkingBookingsUseCase,
         private val addBookingUseCase: AddBookingUseCase,
         private val getFreeTimesUseCase: GetFreeTimesUseCase,
-        private val getTemplatesUseCase: GetTemplatesUseCase
+        private val getTemplatesUseCase: GetTemplatesUseCase,
+        private val getUserUseCase: GetUserUseCase
     ) {
         inner class Factory(
             private val id: Int
@@ -143,7 +148,8 @@ internal class CoworkingVM(
                     getCoworkingBookingsUseCase = getCoworkingBookingsUseCase,
                     addBookingUseCase = addBookingUseCase,
                     getTemplatesUseCase = getTemplatesUseCase,
-                    getFreeTimesUseCase = getFreeTimesUseCase
+                    getFreeTimesUseCase = getFreeTimesUseCase,
+                    getUserUseCase = getUserUseCase
                 ) as T
             }
         }

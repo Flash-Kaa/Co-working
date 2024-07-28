@@ -1,5 +1,6 @@
 package com.na.coworking.di.modules.coworking
 
+import com.na.coworking.domain.usecases.account.GetUserUseCase
 import com.na.coworking.domain.usecases.bookings.AddBookingUseCase
 import com.na.coworking.domain.usecases.bookings.GetCoworkingBookingsUseCase
 import com.na.coworking.domain.usecases.bookings.GetFreeTimesUseCase
@@ -17,12 +18,14 @@ internal class CoworkingViewModelFactoryModule {
         getCoworkingBookingsUseCase: GetCoworkingBookingsUseCase,
         addBookingUseCase: AddBookingUseCase,
         getFreeTimesUseCase: GetFreeTimesUseCase,
-        getTemplatesUseCase: GetTemplatesUseCase
+        getTemplatesUseCase: GetTemplatesUseCase,
+        getUserUseCase: GetUserUseCase
     ) = CoworkingVM.FactoryWrapperWithUseCases(
         getCoworkingByIdUseCase = getCoworkingByIdUseCase,
         getCoworkingBookingsUseCase = getCoworkingBookingsUseCase,
         addBookingUseCase = addBookingUseCase,
         getFreeTimesUseCase = getFreeTimesUseCase,
-        getTemplatesUseCase = getTemplatesUseCase
+        getTemplatesUseCase = getTemplatesUseCase,
+        getUserUseCase = getUserUseCase
     )
 }

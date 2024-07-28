@@ -1,100 +1,47 @@
 package com.na.coworking.data.bookings
 
+import com.na.coworking.data.network.ApiService
+import com.na.coworking.data.network.entities.ReservationsNetEntity.ReservationsNetEntityItem.Companion.toReservation
 import com.na.coworking.domain.entities.Booking
 import com.na.coworking.domain.entities.CoworkingBooking
 import com.na.coworking.domain.entities.Location
 import com.na.coworking.domain.interfaces.bookings.BookingsDataSource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.flow
 
 internal class BookingsDSImpl(
-    // TODO: private val service: BookingService
+    private val service: ApiService
 ) : BookingsDataSource {
-    private var userBookings = listOf(
-        Booking(
-            id = 0,
-            timeStart = "12:00",
-            timeEnd = "13:00",
-            date = "2024-07-27",
-            image = "",
-            isConfirmed = false,
-            name = "радиоточка"
-        ),
-        Booking(
-            id = 1,
-            timeStart = "18:30",
-            timeEnd = "19:00",
-            date = "2024-07-27",
-            image = "",
-            isConfirmed = false,
-            name = "коворкинг"
-        ),
-        Booking(
-            id = 2,
-            timeStart = "14:00",
-            timeEnd = "14:20",
-            date = "2024-07-27",
-            image = "",
-            isConfirmed = false,
-            name = "р-044"
-        ),
-    )
+    override suspend fun getCoworkingBookings(coworkingId: Int): Flow<List<CoworkingBooking>> {
+        return flow {
+            emit(
+                service.getListOfWorkspaceBookings(coworkingId)
+                    .map { it.toCoworkingBooking() }
+            )
+        }
+    }
 
-    private var allBookings = listOf(
-        CoworkingBooking(
-            idObject = 1,
-            idWorkspace = 12323,
-            date = "2024-07-27",
-            isConfirmed = false,
-            timeStart = "12:00",
-            timeEnd = "13:00"
-        ),
-        CoworkingBooking(
-            idObject = 1,
-            idWorkspace = 12323,
-            date = "2024-07-27",
-            isConfirmed = false,
-            timeStart = "18:30",
-            timeEnd = "19:20"
-        ),
-        CoworkingBooking(
-            idObject = 1,
-            idWorkspace = 12323,
-            date = "2024-07-27",
-            isConfirmed = false,
-            timeStart = "14:00",
-            timeEnd = "14:20"
-        ),
-    )
-
-    private val _userItems = MutableStateFlow(userBookings)
-    private val userItems = _userItems.asStateFlow()
-
-    private val _allItems = MutableStateFlow(allBookings)
-    private val allItems = _allItems.asStateFlow()
-
-    override suspend fun getCoworkingBookings(coworkingId: Int): Flow<List<CoworkingBooking>> =
-        allItems
-
-    override suspend fun getUserBookings(): Flow<List<Booking>> = userItems
+    override suspend fun getUserBookings(userId: Int): Flow<List<Booking>> {
+        return flow {
+            emit(
+                service.getListOfUserBookings(userId)
+                    .map {
+                        val workspace = service.getWorkspaceById(it.idWorkspace)
+                        it.toBooking(workspace)
+                    }
+            )
+        }
+    }
 
     override suspend fun cancelBooking(id: Int) {
-        userBookings = userBookings.filter { it.id != id }
-
-        _userItems.update { userBookings }
+        service.cancelBooking(id)
     }
 
     override suspend fun confirmBooking(bookingId: Int, location: Location) {
-        userBookings = userBookings.map {
-            if (it.id == bookingId) it.copy(isConfirmed = true) else it
-        }
-
-        _userItems.update { userBookings }
+        service.confirmBooking(bookingId, location)
     }
 
     override suspend fun addBooking(bookingData: CoworkingBooking) {
-        // TODO
+        service.sendBooking(bookingData.toReservation())
     }
 }

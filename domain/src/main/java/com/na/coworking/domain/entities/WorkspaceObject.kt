@@ -11,7 +11,7 @@ data class WorkspaceObject(
 ) {
     data class Template(
         val id: Int,
-        val picture: String? = null,
+        val image: String,
         val category: String,
         val isReservable: Boolean
     )

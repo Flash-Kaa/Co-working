@@ -24,7 +24,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,7 +36,6 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.na.coworking.R
@@ -46,7 +44,6 @@ import com.na.coworking.domain.entities.Workspace
 import com.na.coworking.ui.global.GExaText
 import com.na.coworking.ui.global.GTeraText
 import com.na.coworking.ui.global.RedButton
-import kotlinx.coroutines.flow.flow
 
 @Composable
 internal fun ListOfCoworking(
@@ -290,57 +287,4 @@ private fun Address(coworking: Workspace) {
             modifier = Modifier.padding(top = 5.dp)
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun PreviewListOfCoworking() {
-    val list = listOf(
-        Workspace(
-            id = 1234,
-            name = "Радиоточка",
-            description = "– это удобные столы, мягкие диваны, много подушек. Это первый коворкинг, в котором расположена точка питания. Здесь студенты могут не только подготовиться к учебным занятиям, но и вкусно перекусить, пообедать. ",
-            address = "Ул. Мира, 32",
-            institute = "ИРИТ-РТФ",
-            rating = 4f,
-            images = listOf(Workspace.Image(12, ""), Workspace.Image(123, ""))
-        ),
-        Workspace(
-            id = 1234,
-            name = "Радиоточка",
-            description = "– это удобные столы, мягкие диваны, много подушек. Это первый коворкинг, в котором расположена точка питания. Здесь студенты могут не только подготовиться к учебным занятиям, но и вкусно перекусить, пообедать. ",
-            address = "Ул. Мира, 32",
-            institute = "ИРИТ-РТФ",
-            rating = 3.2f,
-            images = listOf(
-                Workspace.Image(12, ""),
-                Workspace.Image(123, ""),
-                Workspace.Image(123, "")
-            )
-        ),
-        Workspace(
-            id = 1234,
-            name = "Радиоточка",
-            description = "– это удобные столы, мягкие диваны, много подушек. Это первый коворкинг, в котором расположена точка питания. Здесь студенты могут не только подготовиться к учебным занятиям, но и вкусно перекусить, пообедать. ",
-            address = "Ул. Мира, 32",
-            institute = "ИРИТ-РТФ",
-            rating = 3.2f,
-            images = listOf(
-                Workspace.Image(12, ""),
-                Workspace.Image(123, ""),
-                Workspace.Image(123, ""),
-                Workspace.Image(123, ""),
-                Workspace.Image(123, ""),
-                Workspace.Image(123, ""),
-                Workspace.Image(123, ""),
-                Workspace.Image(123, ""),
-                Workspace.Image(123, "")
-            )
-        )
-    )
-
-    ListOfCoworking(
-        state = flow { emit(list) }.collectAsState(initial = list),
-        getAction = { {} }
-    )
 }

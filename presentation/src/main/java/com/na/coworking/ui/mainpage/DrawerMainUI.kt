@@ -18,6 +18,7 @@ fun DrawerMainUI(
 ) {
     val viewModel: MainPageVM = viewModel(
         factory = LocalContext.current.appComponent
+            .provideTokenUseCasesComponent()
             .getMainPageVMSubcomponent()
             .provideFactoryWrapper()
             .Factory(router)

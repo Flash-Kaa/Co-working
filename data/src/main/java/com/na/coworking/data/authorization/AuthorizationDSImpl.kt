@@ -1,19 +1,25 @@
 package com.na.coworking.data.authorization
 
+import com.na.coworking.data.network.ApiService
+import com.na.coworking.data.network.entities.LoginDataForPost
 import com.na.coworking.domain.entities.AuthorizationData
 import com.na.coworking.domain.entities.Token
 import com.na.coworking.domain.interfaces.authorization.AuthorizationDataSource
-import kotlinx.coroutines.delay
 
 internal class AuthorizationDSImpl(
-    // TODO: private val service: AuthorizationService
+    private val service: ApiService
 ) : AuthorizationDataSource {
+    /**
+     * Need coroutine exception handler
+     */
     override suspend fun authorize(data: AuthorizationData): Token {
-        delay(1000L)
-        if (data.login != "login" || data.password != "password") {
-            throw IllegalArgumentException("unexpected auth with hard data")
-        }
+        val accessToken = service.authorize(
+            LoginDataForPost(
+                login = data.login,
+                password = data.password
+            )
+        )
 
-        return Token(Token.State.HasLogin(data.login + data.password))
+        return Token(Token.State.HasLogin(accessToken.accessToken))
     }
 }
