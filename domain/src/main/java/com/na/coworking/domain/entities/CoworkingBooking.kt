@@ -6,5 +6,6 @@ data class CoworkingBooking(
     val timeStart: String,
     val timeEnd: String,
     val date: String,
-    val isConfirmed: Boolean
+    val isConfirmed: Boolean,
+    val idUser: Int
 )

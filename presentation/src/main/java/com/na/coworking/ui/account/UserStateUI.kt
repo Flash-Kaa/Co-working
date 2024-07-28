@@ -18,12 +18,4 @@ data class UserStateUI(
             accessLevel = accessLevel
         )
     }
-
-    fun toEntity() = User(
-        id = id,
-        firstName = firstName,
-        secondName = secondName,
-        email = email,
-        accessLevel = accessLevel
-    )
 }

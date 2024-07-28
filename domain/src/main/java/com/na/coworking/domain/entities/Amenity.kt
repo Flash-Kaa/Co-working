@@ -8,6 +8,6 @@ data class Amenity(
         val id: Int,
         val name: String,
         val category: String,
-        val picture: String? = null
+        val image: String
     )
 }

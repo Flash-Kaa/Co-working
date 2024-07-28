@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface BookingsDataSource {
     suspend fun getCoworkingBookings(coworkingId: Int): Flow<List<CoworkingBooking>>
 
-    suspend fun getUserBookings(): Flow<List<Booking>>
+    suspend fun getUserBookings(userId: Int): Flow<List<Booking>>
 
     suspend fun cancelBooking(id: Int)
 

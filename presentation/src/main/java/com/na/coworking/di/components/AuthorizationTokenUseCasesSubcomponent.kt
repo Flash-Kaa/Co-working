@@ -1,5 +1,7 @@
 package com.na.coworking.di.components
 
+import com.na.coworking.data.network.ApiService
+import com.na.coworking.data.di.ServiceModule
 import com.na.coworking.data.di.TokenScope
 import com.na.coworking.di.modules.authorization.AuthorizationTokenUseCasesModule
 import com.na.coworking.domain.usecases.authorization.GetTokenUseCase
@@ -9,7 +11,7 @@ import com.na.coworking.domain.usecases.authorization.UpdateTokenUseCase
 import dagger.Subcomponent
 
 @TokenScope
-@Subcomponent(modules = [AuthorizationTokenUseCasesModule::class])
+@Subcomponent(modules = [AuthorizationTokenUseCasesModule::class, ServiceModule::class])
 internal interface AuthorizationTokenUseCasesSubcomponent {
     fun provideGetTokenUseCase(): GetTokenUseCase
 
@@ -22,4 +24,6 @@ internal interface AuthorizationTokenUseCasesSubcomponent {
     fun provideUserUseCasesComponent(): UserUseCaseSubcomponent
 
     fun getAuthorizationVMSubcomponent(): AuthorizationViewModelSubcomponent
+
+    fun provideApiService(): ApiService
 }
